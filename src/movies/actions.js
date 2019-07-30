@@ -24,7 +24,7 @@ const list = async (req, res, next) => {
 }
 
 function createMovie(title, length, release_date, rating, language, directors_id, studio_id){
-  const createNewMovie = 'INSERT INTO movies(title,length,release_date,rating,language,directors_id,studio_id) VALUES(?,?,?,?,?,?,?)';
+  const createNewMovie = 'INSERT INTO movies (title, length, release_date, rating, language, directors_id, studio_id) VALUES (?,?,?,?,?,?,?)';
   return new Promise((resolve, reject)=>{
     con.query(createNewMovie, [title, length, release_date, rating, language, directors_id, studio_id], (err, results) => {
       if (err) {
@@ -36,7 +36,7 @@ function createMovie(title, length, release_date, rating, language, directors_id
 }
 
 const create = async (req, res,next) => {
-  // const { id }: { id: number } = req.params;
+  const { id }: { id: string } = req.params;
   const {
     title,
     length,
