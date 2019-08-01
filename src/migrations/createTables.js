@@ -3,6 +3,7 @@ const moviesCreateModel = `
     id INT(11) NOT NULL AUTO_INCREMENT,
     title VARCHAR(45) NOT NULL,
     length VARCHAR(45) NOT NULL,
+    release_date VARCHAR(45) NOT NULL,
     rating VARCHAR(10) NOT NULL,
     language VARCHAR(45) NOT NULL,
     directors_id INT(11) NOT NULL,

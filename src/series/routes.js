@@ -3,9 +3,9 @@ import actions from './actions';
 
 const { list } = actions;
  
-const moviesRouter = Router();
+const seriesRouter = Router();
 
-moviesRouter.get('/movies', list);
+seriesRouter.get('/series', list);
 
 
-export default moviesRouter;
+export default seriesRouter;

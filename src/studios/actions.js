@@ -2,10 +2,10 @@ import database from '../database/mysql';
 
 const { con } = database;
 
-function listAllMovies() {
-  const listMovies = 'SELECT * FROM movies';
+function listAllStudios() {
+  const listStudios = 'SELECT * FROM studio';
   return new Promise((resolve, reject) => {
-    con.query(listMovies, (err, results) => {
+    con.query(listStudios, (err, results) => {
       if (err) throw (err);
       resolve(results);
     });
@@ -14,8 +14,8 @@ function listAllMovies() {
 
 const list = async (req, res, next) => {
   try {
-    const movies: Array = await listAllMovies();
-    res.status(200).send({ success: true, message: 'A list of all movies', body: movies });
+    const studios: Array = await listAllStudios();
+    res.status(200).send({ success: true, message: 'A list of all studios', body: studios });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
