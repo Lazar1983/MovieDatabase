@@ -36,8 +36,8 @@ const create = async (req, res,next) => {
   } = req.body;
 
   try {
-    const createNewMovie = 'INSERT INTO administrator (username, email, password, phonenumber) VALUES (?,?,?,?)';
-    con.query(createNewMovie, [username, email, password, phonenumber], (err, results) => {
+    const createNewAdmin = 'INSERT INTO administrator (username, email, password, phonenumber) VALUES (?,?,?,?)';
+    con.query(createNewAdmin, [username, email, password, phonenumber], (err, results) => {
       if (err) {
         reject(err);
       }
@@ -54,48 +54,10 @@ const create = async (req, res,next) => {
   await next;
 }
 
-const createMovie = async (req, res, next) => {
-  const { id } : { id : string } = req.params;
-  const {
-    title,
-    length,
-    release_date, 
-    rating,
-    language,
-    directors_id,
-    studio_id
-  }: {
 
-    title: string,
-    length: string,
-    release_date: string,
-    rating: string,
-    language: string,
-    directors_id: Number,
-    studio_id: Number
-  } = req.body;
-
-  try {
-    const createNewMovie = 'INSERT INTO movies (title, length, release_date, rating, language, directors_id, studio_id) VALUES (?,?,?,?,?,?,?)';
-    con.query(createNewMovie, [title, length, release_date, rating, language, directors_id, studio_id], (err, results) => {
-      if (err) {
-        reject(err);
-      }
-      console.log(results);
-    });
-    res.status(201).send({ success: true, message: 'Created new movie', body: {title, length, release_date, rating, language, directors_id, studio_id} });
-  } catch (error) {
-    res.status(500).send({ success: false, message: 'Server error'});
-  }
-  
-  
-
-  await next;
-}
 
 
 export default {
   list,
-  create,
-  createMovie
+  create
 } 
