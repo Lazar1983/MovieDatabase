@@ -27,8 +27,13 @@ const adminCreateModel = `
     id INT(11) NOT NULL AUTO_INCREMENT,
     username VARCHAR(45) NOT NULL,
     email VARCHAR(45) NOT NULL,
-    password VARCHAR(45) NOT NULL,
     phonenumber VARCHAR(45) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    salt VARCHAR(255),
+    created_at DATE,
+    update_at DATE,
+    deleted_at DATE,
+    lastSignIn DATE,
     PRIMARY key (id)
   )
 `;

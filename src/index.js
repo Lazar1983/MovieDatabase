@@ -11,7 +11,7 @@ import indexRouter from './index/router';
 
 const app = express();
 
-const port = process.env.PORT || 3037;
+const port = process.env.PORT || 3030;
 
 app.use(logger('dev'));
 app.use(cors());
@@ -19,7 +19,7 @@ app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ type: '*/*' }));
 
-// const publicRoutePaths = ['/login', '/sign-up'];
+// const publicRoutePaths = ['/sign-up', '/login'];
 // app.use(jwt({ secret: 'aaaa' }).unless({ path: publicRoutePaths }));
 
 app.use(indexRouter);

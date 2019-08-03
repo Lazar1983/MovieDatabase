@@ -7,7 +7,7 @@ const moviesRouter = Router();
 
 moviesRouter.get('/movies', list);
 moviesRouter.get('/movies/:title', getMovieByName);
-moviesRouter.get('/movies/:search/:language', getMovieByLanguage);
+moviesRouter.get('/movies/:language/movieLanguage', getMovieByLanguage);
 
 
 export default moviesRouter;
