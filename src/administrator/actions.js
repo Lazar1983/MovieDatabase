@@ -28,7 +28,7 @@ const list = async (req, res, next) => {
   await next;
 }
 
-const create = async (req, res, next) => {
+const createAdmin = async (req, res, next) => {
   const {
     username, 
     email, 
@@ -66,8 +66,38 @@ const create = async (req, res, next) => {
   await next;
 }
 
+const login = async (req, res, next) => {
+  const { email, password } : { email: string, password: string } = req.body;
+
+  const adminWithEmail = 'SELECT * FROM administrator WHERE email = ?';
+  return con.query(adminWithEmail, email, (err, results) => {
+    if(err) {
+      console.error(err);
+    }
+    const admin = results.find(emailObj => emailObj.email === email);
+
+    if (results && results.length && admin.email) {
+      const matchPassword : boolean = bcrypt.compareSync(password, admin.password);
+      if (matchPassword) {
+        delete admin.password;
+        delete admin.salt;
+        const adminId = admin.id;
+        const token = jwt.sign({ admin }, 'aaaa', { expiresIn: '1h'});
+        res.status(200).send({message: 'Logged in', token: token});
+      } else {
+        res.status(403).send('Password is not correct');
+        }
+    } else {
+      res.status(404).send(`User with email ${email} not found!`);
+    }
+  })
+
+
+  await next;
+}
+
 function createSingleMovie(title, length, release_date, rating, language, directors_id, studio_id) {
-  const createNewMovie = 'INSERT INTO movies (title, length release_date, rating, language, directors_id, studio_id) VALUES (?,?,?,?,?,?,?)';
+  const createNewMovie = 'INSERT INTO movies (title, length, release_date, rating, language, directors_id, studio_id) VALUES (?,?,?,?,?,?,?)';
   return new Promise((resolve, reject) => {
     con.query(createNewMovie, [title, length, release_date, rating, language, directors_id, studio_id], (err, results) => {
       if (err) {
@@ -106,39 +136,45 @@ const createMovie = async (req, res, next) => {
   await next;
 }
 
-const login = async (req, res, next) => {
-  const { email, password } : { email: string, password: string } = req.body;
+function createSingleActor(first_name, last_name, birth_date) {
+  const createNewActor = 'INSERT INTO actors (first_name, last_name, birth_date) VALUES (?,?,?)';
+  return new Promise((resolve, reject) => {
+    con.query(createNewActor, [first_name, last_name, birth_date], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+}
 
-  const adminWithEmail = 'SELECT * FROM administrator WHERE email = ?';
-  return con.query(adminWithEmail, email, (err, results) => {
-    if(err) {
-      console.error(err);
-    }
-    const admin = results.find(emailObj => emailObj.email === email);
+const createActor = async (req, res, next) => {
+  const {
+    first_name,
+    last_name,
+    birth_date
+  }: {
+    first_name: string,
+    last_name: string,
+    birth_date: string
+  } = req.body;
 
-    if (results && results.length && admin.email) {
-      const matchPassword : boolean = bcrypt.compareSync(password, admin.password);
-      if (matchPassword) {
-        delete admin.password;
-        delete admin.salt;
-        const adminId = admin.id;
-        const token = jwt.sign({ admin }, 'aaaa', { expiresIn: '1h'});
-        res.status(200).send({message: 'Logged in', token: token});
-      } else {
-        res.status(403).send('Password is not correct');
-        }
-    } else {
-      res.status(404).send(`User with email ${email} not found!`);
-    }
-  })
-
-
+  try {
+    const newActor = await createSingleActor(first_name, last_name, birth_date);
+    res.status(201).send({ success: true, message: 'Created new actor', body: {first_name, last_name, birth_date} });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+  
   await next;
 }
 
+
+
 export default {
   list,
-  create,
+  createAdmin,
+  login,
   createMovie,
-  login
+  createActor
 } 

@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import actions from './actions';
 
-const { list, create, createMovie, login } = actions;
+const { list, createAdmin, login, createMovie, createActor } = actions;
 
 const adminRouter = Router();
 
 adminRouter.get('/admin', list);
-adminRouter.post('/sign-up', create);
-adminRouter.post('/admin/:id/movies', createMovie);
+adminRouter.post('/sign-up', createAdmin);
 adminRouter.post('/login', login);
-
+adminRouter.post('/createMovie', createMovie);
+adminRouter.post('/createActor', createActor);
 
 export default adminRouter;
