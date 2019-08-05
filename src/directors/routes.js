@@ -8,5 +8,4 @@ const directorsRouter = Router();
 directorsRouter.get('/directors', list);
 directorsRouter.get('/directors/:first_name', get);
 
-
 export default directorsRouter;

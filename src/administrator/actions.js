@@ -96,10 +96,10 @@ const login = async (req, res, next) => {
   await next;
 }
 
-function createSingleMovie(title, length, release_date, rating, language, directors_id, studio_id) {
-  const createNewMovie = 'INSERT INTO movies (title, length, release_date, rating, language, directors_id, studio_id) VALUES (?,?,?,?,?,?,?)';
+function createSingleMovie(title, length, release_date, rating, language, directors_movies_id, studio_id, genres_movies_id) {
+  const createNewMovie = 'INSERT INTO movies (title, length, release_date, rating, language, directors_movies_id, studio_id, genres_movies_id) VALUES (?,?,?,?,?,?,?,?)';
   return new Promise((resolve, reject) => {
-    con.query(createNewMovie, [title, length, release_date, rating, language, directors_id, studio_id], (err, results) => {
+    con.query(createNewMovie, [title, length, release_date, rating, language, directors_movies_id, studio_id, genres_movies_id], (err, results) => {
       if (err) {
         reject(err);
       }
@@ -115,21 +115,23 @@ const createMovie = async (req, res, next) => {
     release_date, 
     rating,
     language,
-    directors_id,
-    studio_id
+    directors_movies_id,
+    studio_id,
+    genres_movies_id
   }: {
     title: string,
     length: string,
     release_date: string,
     rating: string,
     language: string,
-    directors_id: number,
-    studio_id: number
+    directors_movies_id: number,
+    studio_id: number,
+    genres_movies_id : number
   } = req.body;
   
   try {
-    const newMovie = await createSingleMovie (title, length, release_date, rating, language, directors_id, studio_id);
-    res.status(201).send({ success: true, message: 'Created new movie', body: {title, length, release_date, rating, language, directors_id, studio_id} });
+    const newMovie = await createSingleMovie (title, length, release_date, rating, language, directors_movies_id, studio_id, genres_movies_id);
+    res.status(201).send({ success: true, message: 'Created new movie', body: {title, length, release_date, rating, language, directors_movies_id, studio_id, genres_movies_id} });
   } catch (error) {
     res.status(500).send({ success: false, message: 'Server error'});
   }
@@ -137,7 +139,7 @@ const createMovie = async (req, res, next) => {
 }
 
 function createSingleActor(first_name, last_name, birth_date) {
-  const createNewActor = 'INSERT INTO actors (first_name, last_name, birth_date) VALUES (?,?,?)';
+  const createNewActor = 'INSERT INTO actors(first_name, last_name, birth_date) VALUES (?,?,?)';
   return new Promise((resolve, reject) => {
     con.query(createNewActor, [first_name, last_name, birth_date], (err, results) => {
       if (err) {
@@ -169,6 +171,140 @@ const createActor = async (req, res, next) => {
   await next;
 }
 
+function createSingleDirector(first_name, last_name, birth_date) {
+  const createNewDirector = 'INSERT INTO directors (first_name, last_name, birth_date) VALUES (?,?,?)';
+  return new Promise((resolve, reject) => {
+    con.query(createNewDirector, [first_name, last_name, birth_date], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+}
+
+const createDirector = async (req, res, next) => {
+  const {
+    first_name,
+    last_name,
+    birth_date
+  }: {
+    first_name: string,
+    last_name: string,
+    birth_date: string
+  } = req.body;
+
+  try {
+    const newDirector = await createSingleDirector(first_name, last_name, birth_date);
+    res.status(201).send({ success: true, message: 'Created new director', body: {first_name, last_name, birth_date} });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+  
+  await next;
+}
+
+function createSingleSerie (title, language, release_date, length, rating, directors_id, genres_series_id) {
+  const createNewSerie = 'INSERT INTO series (title, language, release_date, length, rating, directors_id, genres_series_id) VALUES (?,?,?,?,?,?,?)';
+  return new Promise((resolve, reject) => {
+    con.query(createNewSerie, [title, language, release_date, length, rating, directors_id, genres_series_id], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+}
+
+const createSerie = async (req, res, next) => {
+  const {
+    title, 
+    language, 
+    release_date, 
+    length, 
+    rating, 
+    directors_id,
+    genres_series_id
+  }: {
+    title : string,
+    language : string,
+    release_date : string,
+    length : string,
+    rating : string,
+    directors_id : number,
+    genres_series_id : number
+  } = req.body;
+
+  try {
+    const newSerie = await createSingleSerie(title, language, release_date, length, rating, directors_id, genres_series_id);
+    res.status(201).send({ success: true, message: 'Created new director', body: {title, language, release_date, length, rating, directors_id, genres_series_id} });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+  
+  await next;
+}
+
+function createSingleStudio (name, worth, ceo) {
+  const createNewStudio = 'INSERT INTO studio (name, worth, ceo) VALUES (?,?,?)';
+  return new Promise((resolve, reject) => {
+    con.query(createNewStudio, [name, worth, ceo], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+}
+
+const createStudio = async (req, res, next) => {
+  const {
+    name,
+    worth,
+    ceo,
+  }: {
+    name : string,
+    worth : string,
+    ceo : string,
+  } = req.body;
+
+  try {
+    const newStudio = await createSingleStudio (name, worth, ceo);
+    res.status(201).send({ success: true, message: 'Created new studio', body: {name, worth, ceo} });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+  
+  await next;
+}
+
+function createMovieGenre (genre_name) {
+  const createNewGenre = 'INSERT INTO genres (genre_name) VALUES (?)';
+  return new Promise((resolve, reject) => {
+    con.query(createNewGenre, [genre_name], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+}
+
+const createGenre = async (req, res, next) => {
+  const { genre_name }: { genre_name : string } = req.body;
+  try {
+    const newGenre = await createMovieGenre (genre_name);
+    res.status(201).send({ success: true, message: 'Created new studio', body: {genre_name} });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+  
+  await next;
+}
+
+
+
+
 
 
 export default {
@@ -176,5 +312,9 @@ export default {
   createAdmin,
   login,
   createMovie,
-  createActor
+  createActor,
+  createDirector,
+  createSerie,
+  createStudio,
+  createGenre
 } 

@@ -1,10 +1,11 @@
 import { Router } from 'express';
+import admins from '../administrator/index';
 import movies from '../movies/index';
 import actors from '../actors/index';
-import admins from '../administrator/index';
 import directors from '../directors/index';
 import series from '../series/index';
 import studios from '../studios/index';
+import genres from '../genres/index';
 
 const { routes } = admins;
 
@@ -16,5 +17,6 @@ indexRouter.use(movies.routes);
 indexRouter.use(directors.routes);
 indexRouter.use(series.routes);
 indexRouter.use(studios.routes);
+indexRouter.use(genres.routes);
 
 export default indexRouter;

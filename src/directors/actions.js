@@ -44,7 +44,9 @@ const get = async (req, res, next) => {
 }
 
 
+
+
 export default {
   list,
-   get
+  get
 } 
