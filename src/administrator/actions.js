@@ -204,10 +204,10 @@ const createDirector = async (req, res, next) => {
   await next;
 }
 
-function createSingleSerie (title, language, release_date, length, rating, directors_id, genres_series_id) {
+function createSingleSerie (title, language, release_date, episodes, rating, directors_id, genres_series_id) {
   const createNewSerie = 'INSERT INTO series (title, language, release_date, length, rating, directors_id, genres_series_id) VALUES (?,?,?,?,?,?,?)';
   return new Promise((resolve, reject) => {
-    con.query(createNewSerie, [title, language, release_date, length, rating, directors_id, genres_series_id], (err, results) => {
+    con.query(createNewSerie, [title, language, release_date, episodes, rating, directors_id, genres_series_id], (err, results) => {
       if (err) {
         reject(err);
       }
@@ -221,7 +221,7 @@ const createSerie = async (req, res, next) => {
     title, 
     language, 
     release_date, 
-    length, 
+    episodes, 
     rating, 
     directors_id,
     genres_series_id
@@ -229,15 +229,15 @@ const createSerie = async (req, res, next) => {
     title : string,
     language : string,
     release_date : string,
-    length : string,
+    episodes : number,
     rating : string,
     directors_id : number,
     genres_series_id : number
   } = req.body;
 
   try {
-    const newSerie = await createSingleSerie(title, language, release_date, length, rating, directors_id, genres_series_id);
-    res.status(201).send({ success: true, message: 'Created new director', body: {title, language, release_date, length, rating, directors_id, genres_series_id} });
+    const newSerie = await createSingleSerie(title, language, release_date, episodes, rating, directors_id, genres_series_id);
+    res.status(201).send({ success: true, message: 'Created new director', body: {title, language, release_date, episodes, rating, directors_id, genres_series_id} });
   } catch (error) {
     res.status(500).send({ success: false, message: 'Server error' });
   }
@@ -301,8 +301,6 @@ const createGenre = async (req, res, next) => {
   
   await next;
 }
-
-
 
 
 

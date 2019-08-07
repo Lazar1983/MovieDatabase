@@ -43,6 +43,7 @@ function getMovieLanguage (language) {
     })
   }) 
 }
+
 const getMovieByLanguage = async (req, res, next) => {
   const { language } : { language : string } = req.params;
   try {
@@ -65,6 +66,56 @@ const getMovieByName = async (req, res, next) => {
   await next;
 }
 
+function getMovieByGenrePromise (genre_name) {
+  const getMovieByGenreQuery = 'SELECT title FROM movies JOIN genres ON movies.genres_movies_id = genres.id WHERE genre_name = ?';
+  return new Promise((resolve, reject) => {
+    con.query(getMovieByGenreQuery, [genre_name], (err, results) => {
+      if (err) {
+        reject (err);
+      }
+      resolve(results);
+    })
+  }) 
+}
+
+const getMovieByGenre = async (req, res, next) => {
+  const { genre_name } : { genre_name : string } = req.params;
+  try {
+    const movieGenre = await getMovieByGenrePromise (genre_name);
+    res.status(200).send({ success: true, message: 'your movie search by genre is:', body: movieGenre });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'internal server error'});
+  }
+  await next;
+}
+
+function getMovieByCast (title) {
+  const getMovieByCastQuery = 'SELECT first_name, last_name FROM actors JOIN actors_movies ON actors.id = actors_movies.actors_movies_id JOIN movies ON actors_movies.movies_id = movies.id WHERE title = ?';
+  return new Promise((resolve, reject) => {
+    con.query(getMovieByCastQuery, [title], (err, results) => {
+      if (err) {
+        reject (err);
+      }
+      resolve(results);
+    })
+  }) 
+}
+
+const getMoviesCast = async (req, res, next) => {
+  const { title } : { title : string } = req.params;
+  try {
+    const movieCast = await getMovieByCast (title);
+    res.status(200).send({ success: true, message: 'your movie search by cast is:', body: movieCast });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'internal server error'});
+  }
+  await next;
+}
+
+
+
+
+
 
 
 
@@ -75,5 +126,7 @@ const getMovieByName = async (req, res, next) => {
 export default {
   list,
   getMovieByName,
-  getMovieByLanguage
+  getMovieByLanguage,
+  getMovieByGenre,
+  getMoviesCast
 } 

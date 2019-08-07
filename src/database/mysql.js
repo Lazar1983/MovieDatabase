@@ -3,7 +3,18 @@ import mysqlJsonConfigs from '../../config/mysql';
 import models from '../migrations/createTables';
 
 const dbConfig = mysqlJsonConfigs['dev']; 
-const { adminCreateModel, moviesCreateModel, actorsCreateModel, directorsCreateModel, seriesCreateModel, studioCreateModel, genresCreateModel } = models;
+const { 
+  adminCreateModel, 
+  moviesCreateModel, 
+  actorsCreateModel, 
+  directorsCreateModel, 
+  seriesCreateModel, 
+  studioCreateModel, 
+  genresCreateModel,
+  actorsMoviesCreateModel,
+  actorsSeriesCreateModel
+} = models;
+
 const con = mysql.createConnection(dbConfig); 
 
 con.connect(() => {
@@ -15,6 +26,8 @@ con.connect(() => {
   con.query(seriesCreateModel);
   con.query(studioCreateModel);
   con.query(genresCreateModel);
+  con.query(actorsMoviesCreateModel);
+  con.query(actorsSeriesCreateModel);
 }); 
 
 export default {
