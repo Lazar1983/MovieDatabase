@@ -2,7 +2,8 @@ import { Router } from 'express';
 import actions from './actions';
 
 const { 
-  list, 
+  list,
+  getAdminById, 
   createAdmin, 
   login, 
   createMovie, 
@@ -10,12 +11,14 @@ const {
   createDirector, 
   createSerie, 
   createStudio, 
-  createGenre 
+  createGenre,
+  updateAdmin 
 } = actions;
 
 const adminRouter = Router();
 
 adminRouter.get('/admin', list);
+adminRouter.get('/admin/:id', getAdminById);
 adminRouter.post('/sign-up', createAdmin);
 adminRouter.post('/login', login);
 adminRouter.post('/admin/:id/movies/', createMovie);
@@ -24,6 +27,7 @@ adminRouter.post('/admin/:id/director/', createDirector);
 adminRouter.post('/admin/:id/serie/', createSerie);
 adminRouter.post('/admin/:id/studio/', createStudio);
 adminRouter.post('/admin/:id/genre/', createGenre);
+adminRouter.put('/admin/:id', updateAdmin);
 
 
 export default adminRouter;

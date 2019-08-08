@@ -25,7 +25,7 @@ const list = async (req, res, next) => {
 function getSingleMovie(title) {
   const getMovieByNameQuery = 'SELECT * FROM movies where title = ?';
   return new Promise((resolve, reject) => {
-    con.query(getMovieByNameQuery, [title],(err, results) => {
+    con.query(getMovieByNameQuery, [title], (err, results) => {
       if (err) throw (err);
       resolve(results);
     });
@@ -56,7 +56,7 @@ const getMovieByLanguage = async (req, res, next) => {
 }
 
 const getMovieByName = async (req, res, next) => {
-  const { title } : { title : string} = req.params;
+  const { title } : { title : string } = req.params;
   try {
     const movieName = await getSingleMovie(title);
     res.status(200).send({ success: true, message: 'your movie search by title is:', body: movieName });

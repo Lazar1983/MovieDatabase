@@ -28,6 +28,31 @@ const list = async (req, res, next) => {
   await next;
 }
 
+function listAdminId (id) {
+  const getAdmin = 'SELECT * FROM administrator WHERE id=?';
+  return new Promise((resolve, reject) => {
+    con.query(getAdmin, [Number(id)], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+      console.log(results);
+    });
+  });
+};
+
+const getAdminById = async (req, res, next) => {
+  const { id } : { id: string } = req.params;
+  try {
+    const adminByIds = await listAdminId(id);
+    res.status(200).send({ success: true, message: 'Get administrators by id', body: adminByIds });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'internal server error'});
+  }
+  await next;
+}
+
+
 const createAdmin = async (req, res, next) => {
   const {
     username, 
@@ -303,10 +328,89 @@ const createGenre = async (req, res, next) => {
 }
 
 
+function updateAdminValues (username, email, phonenumber, password, id) {
+  const updateAdminValues = 'UPDATE administrator SET username=?, email=?, phonenumber=?, password=? WHERE id=?';
+  return new Promise((resolve, reject) => {
+    con.query(updateAdminValues, [username, email, phonenumber, password, id], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+}
+
+const updateAdmin = async (req, res, next) => {
+  const { id }: { id : string } = req.params;
+  const { 
+    username,
+    email,
+    phonenumber,
+    password
+  } : {
+    username : ?string,
+    email: ?string,
+    phonenumber: ?string,
+    password: ?string
+  } = Object.assign({}, req.body);
+
+  
+   try {
+    
+    const adminFromDB = await listAdminId(id);
+
+    const admin = adminFromDB[0];
+
+    let adminForUpdate = {
+      username : '',
+      email : '',
+      phonenumber : '',
+      password : ''
+    }
+
+    if (username) {
+      adminForUpdate.username = username;
+    } else {
+      adminForUpdate.username = admin.username;
+    }
+    if (email) {
+      adminForUpdate.email = email;
+    }
+    else {
+      adminForUpdate.email = admin.email;
+    }
+    if (phonenumber) {
+      adminForUpdate.phonenumber = phonenumber;
+    }
+    else {
+      adminForUpdate.phonenumber = admin.phonenumber;
+    }
+    if (password && password.length) {
+      const salt = bcrypt.genSaltSync(10);
+      const getRounds = bcrypt.getRounds(salt);
+      const passHash = bcrypt.hashSync(password, getRounds);
+      adminForUpdate.password = passHash;
+    }
+    else {
+      adminForUpdate.password = admin.passHash;
+    }
+
+    const updatedAdmin = await updateAdminValues (adminForUpdate.username, adminForUpdate.email, adminForUpdate.phonenumber, adminForUpdate.password, id);
+    res.status(201).send({ success: true, message: 'Updated admin', body: {username, email, phonenumber, password} });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+  
+  await next;
+}
+
+
+
 
 
 export default {
   list,
+  getAdminById,
   createAdmin,
   login,
   createMovie,
@@ -314,5 +418,6 @@ export default {
   createDirector,
   createSerie,
   createStudio,
-  createGenre
+  createGenre,
+  updateAdmin
 } 
