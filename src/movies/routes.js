@@ -6,7 +6,8 @@ const {
   getMovieByName, 
   getMovieByLanguage, 
   getMovieByGenre,
-  getMoviesCast
+  getMoviesCast,
+  getMoviesRating
 } = actions;
  
 const moviesRouter = Router();
@@ -16,6 +17,7 @@ moviesRouter.get('/movies/:title', getMovieByName);
 moviesRouter.get('/movies/movieLanguage/:language', getMovieByLanguage);
 moviesRouter.get('/movies/genre/:genre_name', getMovieByGenre);
 moviesRouter.get('/movies/cast/:title', getMoviesCast);
+moviesRouter.get('/movies/rating/:rating', getMoviesRating);
 
 
 export default moviesRouter;

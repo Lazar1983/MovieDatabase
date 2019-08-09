@@ -112,13 +112,28 @@ const getMoviesCast = async (req, res, next) => {
   await next;
 }
 
+function getMoviesByRating (rating) {
+  const getMovieRatingQuery = 'SELECT * FROM movies WHERE rating > ?';
+  return new Promise((resolve, reject) => {
+    con.query(getMovieRatingQuery, [Number(rating)], (err, results) => {
+      if (err) {
+        reject (err);
+      }
+      resolve(results);
+    })
+  }) 
+}
 
-
-
-
-
-
-
+const getMoviesRating = async (req, res, next) => {
+  const { rating } : { rating : string } = req.params;
+  try {
+    const movieRating = await getMoviesByRating (rating);
+    res.status(200).send({ success: true, message: 'your movie search by rating is:', body: movieRating });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'internal server error'});
+  }
+  await next;
+}
 
 
 
@@ -128,5 +143,6 @@ export default {
   getMovieByName,
   getMovieByLanguage,
   getMovieByGenre,
-  getMoviesCast
+  getMoviesCast,
+  getMoviesRating
 } 

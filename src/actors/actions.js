@@ -90,6 +90,33 @@ const getSeriesCast = async (req, res, next) => {
   await next;
 }
 
+function getActorsByDate(compareBirth1, compareBirth) {
+  const getActorsByDate = `SELECT * FROM actors WHERE DATE(${compareBirth1}) > ? AND DATE(${compareBirth}) < ?`;
+  console.log(getActorsByDate);
+  return new Promise((resolve, reject) => {
+    con.query(getActorsByDate, [Date(compareBirth1), Date(compareBirth)], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+};
+
+const getActorsByDateOfBirth = async (req, res, next) => {
+  // const { birth_date }: { birth_date: string } = req.params;
+  const compareBirth1 = req.params.compareBirth1;
+  const compareBirth = req.params.compareBirth;
+  try {
+    const actorsByDate = await getActorsByDate (compareBirth1, compareBirth);
+    console.log(actorsByDate)
+    res.status(200).send({ success: true, message: 'you are searching actors by birth date', body: actorsByDate });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'internal server error'});
+  }
+  await next;
+}
+
 
 
 
@@ -100,5 +127,6 @@ export default {
   list,
   getActorsByName,
   getActorsByMovieTitle,
-  getSeriesCast
+  getSeriesCast,
+  getActorsByDateOfBirth
 } 
