@@ -52,6 +52,31 @@ const getAdminById = async (req, res, next) => {
   await next;
 }
 
+function validatePhoneNumber (phonenumber) {
+  if (phonenumber.charAt(0) === "(" && phonenumber.charAt(4) === ")" && phonenumber.charAt(8) === "-") {
+    return true;
+  } else if (phonenumber.charAt(0) === "+" && phonenumber.length <= 15) {
+    return true;
+  } else if (phonenumber.length <= 9) {
+    return true;
+  } else if (phonenumber.charAt(4) === "-" && phonenumber.charAt(8) === "-" && phonenumber.length === 12) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+function createAdminPromise (username, email, phonenumber, passHash, salt, createAt) {
+  const createNewAdmin = `INSERT INTO administrator (username, email, phonenumber, password, salt, created_at) VALUES (?,?,?,?,?,?)`;
+  return new Promise((resolve, reject) => {
+    con.query(createNewAdmin, [username, email, phonenumber, passHash, salt, createAt], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+};
 
 const createAdmin = async (req, res, next) => {
   const {
@@ -71,23 +96,20 @@ const createAdmin = async (req, res, next) => {
   const passHash = bcrypt.hashSync(password,getRounds);
 
   const createAt = new Date(Date.now());
-  
-  try {
-    const createNewAdmin = 'INSERT INTO administrator (username, email, phonenumber, password, salt, created_at) VALUES (?,?,?,?,?,?)';
-    con.query(createNewAdmin, [username, email, phonenumber, passHash, salt, createAt], (err, results) => {
-      if (err) {
-        console.error(err);
-      }
-      console.log(results);
-    });
 
-    res.status(201).send({ success: true, message: 'Created new admin', body: {username, email, password, phonenumber} });
-  } catch (error) {
-    res.status(500).send({ success: false, message: 'Server error' });
-  }
-  
-  
+  const phoneNumber = validatePhoneNumber (phonenumber);
 
+  if (phoneNumber === true) {
+    try {
+      const createdAdmin = await createAdminPromise(username, email, phonenumber, passHash, salt, createAt);
+      res.status(201).send({ success: true, message: 'Created new admin', body: {username, email, phonenumber, password} });
+    } catch (error) {
+      res.status(500).send({ success: false, message: 'Server error' });
+    } 
+  } else {
+      res.status(404).send({success: false, message: "Invalid phonenumber format"});
+    };
+  
   await next;
 }
 
