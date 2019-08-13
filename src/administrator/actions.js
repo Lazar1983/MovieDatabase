@@ -66,6 +66,14 @@ function validatePhoneNumber (phonenumber) {
   }
 };
 
+function validateEmail (email) {
+  if (email.includes('@') && email.includes(".")) {
+    return true;
+  }else {
+    return false;
+  }
+};
+
 function createAdminPromise (username, email, phonenumber, passHash, salt, createAt) {
   const createNewAdmin = `INSERT INTO administrator (username, email, phonenumber, password, salt, created_at) VALUES (?,?,?,?,?,?)`;
   return new Promise((resolve, reject) => {
@@ -98,8 +106,11 @@ const createAdmin = async (req, res, next) => {
   const createAt = new Date(Date.now());
 
   const phoneNumber = validatePhoneNumber (phonenumber);
+  console.log(phoneNumber)
+  const validEmail = validateEmail(email);
+  console.log(validEmail)
 
-  if (phoneNumber === true) {
+  if (phoneNumber === true && validEmail === true) {
     try {
       const createdAdmin = await createAdminPromise(username, email, phonenumber, passHash, salt, createAt);
       res.status(201).send({ success: true, message: 'Created new admin', body: {username, email, phonenumber, password} });
@@ -107,7 +118,7 @@ const createAdmin = async (req, res, next) => {
       res.status(500).send({ success: false, message: 'Server error' });
     } 
   } else {
-      res.status(404).send({success: false, message: "Invalid phonenumber format"});
+      res.status(404).send({success: false, message: "Invalid phonenumber or email format, valid phonenumber format is +1234567890, 123-456-789, 123456789, (123)-456-789 valid email is example@true.com "});
     };
   
   await next;
@@ -183,6 +194,52 @@ const createMovie = async (req, res, next) => {
     res.status(500).send({ success: false, message: 'Server error'});
   }
   await next;
+}
+
+function updateMovieRatingPromise (rating, id) {
+  const updateRating = `UPDATE movies SET rating = ? WHERE id=?`;
+  return new Promise ((resolve, reject) => {
+    con.query(updateRating, [rating, id], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+}
+
+const updateMovieRating = async (req, res, next) => {
+  const { id } : { id : string } = req.params;
+  const { rating } : { rating: string } = req.body;
+  try {
+    const updateRating = await updateMovieRatingPromise (rating, id);
+    res.status(201).send({success: true, message: "Updated movie rating", body: updateRating })
+  } catch (error) {
+    res.status(500).send({success: false, message: "internal server error" })
+  }
+}
+
+function updateSeriesRatingPromise (rating, id) {
+  const updateRating = `UPDATE series SET rating = ? WHERE id=?`;
+  return new Promise ((resolve, reject) => {
+    con.query(updateRating, [rating, id], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+}
+
+const updateSerieRating = async (req, res, next) => {
+  const { id } : { id : string } = req.params;
+  const { rating } : { rating: string } = req.body;
+  try {
+    const updateRating = await updateSeriesRatingPromise (rating, id);
+    res.status(201).send({success: true, message: "Updated series rating", body: updateRating })
+  } catch (error) {
+    res.status(500).send({success: false, message: "internal server error" })
+  }
 }
 
 function createSingleActor(first_name, last_name, birth_date) {
@@ -349,7 +406,6 @@ const createGenre = async (req, res, next) => {
   await next;
 }
 
-
 function updateAdminValues (username, email, phonenumber, password, id) {
   const updateAdminValues = 'UPDATE administrator SET username=?, email=?, phonenumber=?, password=? WHERE id=?';
   return new Promise((resolve, reject) => {
@@ -377,7 +433,7 @@ const updateAdmin = async (req, res, next) => {
   } = Object.assign({}, req.body);
 
   
-   try {
+  try {
     
     const adminFromDB = await listAdminId(id);
 
@@ -426,9 +482,29 @@ const updateAdmin = async (req, res, next) => {
   await next;
 }
 
+function deleteAdminId (id) {
+  const deleteAdmin = 'DELETE FROM administrator WHERE id = ?';
+  return new Promise((resolve, reject) => {
+    con.query(deleteAdmin, [id], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+}
 
-
-
+const deleteAdmin = async (req, res, next) => {
+  const { id } : { id: string } = req.params;
+  try {
+    const deletetId = await deleteAdminId (id);
+    res.status(204).send({ success: true, message: 'Deleted admin' });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'Server error' });
+  }
+  
+  await next;
+}
 
 export default {
   list,
@@ -441,5 +517,8 @@ export default {
   createSerie,
   createStudio,
   createGenre,
-  updateAdmin
+  updateAdmin,
+  updateMovieRating,
+  updateSerieRating,
+  deleteAdmin
 } 
