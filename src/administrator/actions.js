@@ -36,10 +36,22 @@ function listAdminId (id) {
         reject(err);
       }
       resolve(results);
-      console.log(results);
     });
   });
 };
+
+function getAdminValues (username, email, phonenumber) {
+  const getAdminValue = 'SELECT username, email, phonenumber FROM administrator';
+  return new Promise((resolve, reject) => {
+    con.query(getAdminValue, [username, email, phonenumber], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+};
+
 
 const getAdminById = async (req, res, next) => {
   const { id } : { id: string } = req.params;
@@ -69,7 +81,7 @@ function validatePhoneNumber (phonenumber) {
 function validateEmail (email) {
   if (email.includes('@') && email.includes(".")) {
     return true;
-  }else {
+  } else {
     return false;
   }
 };
@@ -85,6 +97,7 @@ function createAdminPromise (username, email, phonenumber, passHash, salt, creat
     });
   });
 };
+
 
 const createAdmin = async (req, res, next) => {
   const {
@@ -106,14 +119,25 @@ const createAdmin = async (req, res, next) => {
   const createAt = new Date(Date.now());
 
   const phoneNumber = validatePhoneNumber (phonenumber);
-  console.log(phoneNumber)
   const validEmail = validateEmail(email);
-  console.log(validEmail)
 
+  const listAdmin = await listAllAdmins ();
+
+
+  if (listAdmin === null) {
+    const createdAdmin = await createAdminPromise(username, email, phonenumber, passHash, salt, createAt);
+    res.status(201).send({ success: true, message: 'Created new admin', body: {username, email, phonenumber, password}});
+  } else {
+      for (let i = 0; i < listAdmin.length; i++) {
+        if (username === listAdmin[i].username || email === listAdmin[i].email || phonenumber === listAdmin[i].phonenumber) {
+          return res.status(400).send({success: false, message: "Check your username or e-mail or phonenumber"});
+      };
+    };
+  }
   if (phoneNumber === true && validEmail === true) {
     try {
       const createdAdmin = await createAdminPromise(username, email, phonenumber, passHash, salt, createAt);
-      res.status(201).send({ success: true, message: 'Created new admin', body: {username, email, phonenumber, password} });
+      res.status(201).send({ success: true, message: 'Created new admin', body: {username, email, phonenumber, password}});
     } catch (error) {
       res.status(500).send({ success: false, message: 'Server error' });
     } 
