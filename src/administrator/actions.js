@@ -179,65 +179,9 @@ const login = async (req, res, next) => {
         res.status(404).send(`User with email ${email} not found!`);
         } 
     }
-
-
-
   });
   
-  
-  // if (adminsUser === '' && adminsPhone === '') {
-  //   const adminWithEmail = 'SELECT * FROM administrator WHERE email = ?';
-  //   return con.query(adminWithEmail, email, (err, results) => {
-  //     if(err) {
-  //       console.error(err);
-  //     }
-  //     const admin = results.find(emailObj => emailObj.adminsEmail === adminsEmail);
 
-  //     if (results && results.length && admin.adminsEmail) {
-  //       const matchPassword : boolean = bcrypt.compareSync(password, admin.password);
-  //       if (matchPassword) {
-  //         delete admin.password;
-  //         delete admin.salt;
-  //         const adminId = admin.id;
-  //         const token = jwt.sign({ admin }, 'aaaa', { expiresIn: '1h'});
-  //         res.status(200).send({message: 'Logged in', token: token});
-  //       } else {
-  //         res.status(403).send('Password is not correct');
-  //         }
-  //     } else {
-  //       res.status(404).send(`User with email not found!`);
-  //     }
-  //   });
-  // }  else {
-  //   res.status(500)
-  // }
-
-  // if (adminsUser === '' && adminsEmail === '') {
-  //   const adminWithPhone = 'SELECT * FROM administrator WHERE phonenumber = ?';
-  //   return con.query(adminWithPhone, phonenumber, (err, results) => {
-  //     if(err) {
-  //       console.error(err);
-  //     }
-  //     const adminPhone = results.find(phoneObj => phoneObj.adminsPhone === adminsPhone);
-
-  //     if (results && results.length && adminPhone.adminsPhone) {
-  //       const matchPassword : boolean = bcrypt.compareSync(password, adminPhone.password);
-  //       if (matchPassword) {
-  //         delete adminPhone.password;
-  //         delete adminPhone.salt;
-  //         const adminIdPhone = adminPhone.id;
-  //         const token = jwt.sign({ adminPhone }, 'aaaa', { expiresIn: '1h'});
-  //         res.status(200).send({message: 'Logged in', token: token});
-  //       } else {
-  //         res.status(403).send('Password is not correct');
-  //         }
-  //     } else {
-  //       res.status(404).send(`User with phonenumber not found!`);
-  //     }
-  //   });
-  // }  else {
-  //   res.status(500)
-  // }
   await next;
 }
 
