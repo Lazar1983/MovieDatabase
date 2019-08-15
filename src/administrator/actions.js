@@ -40,18 +40,6 @@ function listAdminId (id) {
   });
 };
 
-function getAdminValues (username, email, phonenumber) {
-  const getAdminValue = 'SELECT username, email, phonenumber FROM administrator';
-  return new Promise((resolve, reject) => {
-    con.query(getAdminValue, [username, email, phonenumber], (err, results) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(results);
-    });
-  });
-};
-
 
 const getAdminById = async (req, res, next) => {
   const { id } : { id: string } = req.params;
@@ -97,7 +85,6 @@ function createAdminPromise (username, email, phonenumber, passHash, salt, creat
     });
   });
 };
-
 
 const createAdmin = async (req, res, next) => {
   const {
@@ -149,32 +136,108 @@ const createAdmin = async (req, res, next) => {
 }
 
 const login = async (req, res, next) => {
-  const { email, password } : { email: string, password: string } = req.body;
+  const { username, email, password } : { username: ?string, email: ?string, password: string } = req.body; 
 
-  const adminWithEmail = 'SELECT * FROM administrator WHERE email = ?';
-  return con.query(adminWithEmail, email, (err, results) => {
+
+  const adminWithUsernameOrEmail = 'SELECT * FROM administrator WHERE username = ? OR email = ?';
+  return con.query(adminWithUsernameOrEmail, [username, email], (err, results) => {
     if(err) {
       console.error(err);
     }
-    const admin = results.find(emailObj => emailObj.email === email);
 
-    if (results && results.length && admin.email) {
-      const matchPassword : boolean = bcrypt.compareSync(password, admin.password);
-      if (matchPassword) {
-        delete admin.password;
-        delete admin.salt;
-        const adminId = admin.id;
-        const token = jwt.sign({ admin }, 'aaaa', { expiresIn: '1h'});
-        res.status(200).send({message: 'Logged in', token: token});
+    const adminUser = results.find(userObj => userObj.username === username);
+    const adminEmail = results.find(emailObj => emailObj.email === email);
+    
+    if (!adminEmail) {
+      if (results && results.length && adminUser.username) {
+        const matchPassword : boolean = bcrypt.compareSync(password, adminUser.password);
+        if (matchPassword) {
+          delete adminUser.password;
+          delete adminUser.salt;
+          const adminIdUser = adminUser.id;
+          const token = jwt.sign({ adminUser }, 'aaaa', { expiresIn: '1h'});
+          res.status(200).send({message: 'Logged in', token: token});
+        } else {
+          res.status(403).send('Password is not correct');
+        }
       } else {
-        res.status(403).send('Password is not correct');
+          res.status(404).send(`User with username ${username} not found!`);
         }
     } else {
-      res.status(404).send(`User with email ${email} not found!`);
+      if (results && results.length && adminEmail.email) {
+        const matchPassword : boolean = bcrypt.compareSync(password, adminEmail.password);
+          if (matchPassword) {
+            delete adminEmail.password;
+            delete adminEmail.salt;
+            const adminIdEmail = adminEmail.id;
+            const token = jwt.sign({ adminEmail }, 'aaaa', { expiresIn: '1h'});
+            res.status(200).send({message: 'Logged in', token: token});
+          } else {
+            res.status(403).send('Password is not correct');
+            }
+      } else {
+        res.status(404).send(`User with email ${email} not found!`);
+        } 
     }
-  })
 
 
+
+  });
+  
+  
+  // if (adminsUser === '' && adminsPhone === '') {
+  //   const adminWithEmail = 'SELECT * FROM administrator WHERE email = ?';
+  //   return con.query(adminWithEmail, email, (err, results) => {
+  //     if(err) {
+  //       console.error(err);
+  //     }
+  //     const admin = results.find(emailObj => emailObj.adminsEmail === adminsEmail);
+
+  //     if (results && results.length && admin.adminsEmail) {
+  //       const matchPassword : boolean = bcrypt.compareSync(password, admin.password);
+  //       if (matchPassword) {
+  //         delete admin.password;
+  //         delete admin.salt;
+  //         const adminId = admin.id;
+  //         const token = jwt.sign({ admin }, 'aaaa', { expiresIn: '1h'});
+  //         res.status(200).send({message: 'Logged in', token: token});
+  //       } else {
+  //         res.status(403).send('Password is not correct');
+  //         }
+  //     } else {
+  //       res.status(404).send(`User with email not found!`);
+  //     }
+  //   });
+  // }  else {
+  //   res.status(500)
+  // }
+
+  // if (adminsUser === '' && adminsEmail === '') {
+  //   const adminWithPhone = 'SELECT * FROM administrator WHERE phonenumber = ?';
+  //   return con.query(adminWithPhone, phonenumber, (err, results) => {
+  //     if(err) {
+  //       console.error(err);
+  //     }
+  //     const adminPhone = results.find(phoneObj => phoneObj.adminsPhone === adminsPhone);
+
+  //     if (results && results.length && adminPhone.adminsPhone) {
+  //       const matchPassword : boolean = bcrypt.compareSync(password, adminPhone.password);
+  //       if (matchPassword) {
+  //         delete adminPhone.password;
+  //         delete adminPhone.salt;
+  //         const adminIdPhone = adminPhone.id;
+  //         const token = jwt.sign({ adminPhone }, 'aaaa', { expiresIn: '1h'});
+  //         res.status(200).send({message: 'Logged in', token: token});
+  //       } else {
+  //         res.status(403).send('Password is not correct');
+  //         }
+  //     } else {
+  //       res.status(404).send(`User with phonenumber not found!`);
+  //     }
+  //   });
+  // }  else {
+  //   res.status(500)
+  // }
   await next;
 }
 

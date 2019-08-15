@@ -90,11 +90,11 @@ const getSeriesCast = async (req, res, next) => {
   await next;
 }
 
-function getActorsByDate(compareBirth1, compareBirth) {
-  const getActorsByDate = `SELECT * FROM actors WHERE DATE(${compareBirth1}) > ? AND DATE(${compareBirth}) < ?`;
+function getActorsByDate(fromDate, toDate) {
+  const getActorsByDate = `SELECT * FROM actors WHERE birth_date > ? AND birth_date < ?`;
   console.log(getActorsByDate);
   return new Promise((resolve, reject) => {
-    con.query(getActorsByDate, [Date(compareBirth1), Date(compareBirth)], (err, results) => {
+    con.query(getActorsByDate, [fromDate, toDate], (err, results) => {
       if (err) {
         reject(err);
       }
@@ -104,11 +104,10 @@ function getActorsByDate(compareBirth1, compareBirth) {
 };
 
 const getActorsByDateOfBirth = async (req, res, next) => {
-  // const { birth_date }: { birth_date: string } = req.params;
-  const compareBirth1 = req.params.compareBirth1;
-  const compareBirth = req.params.compareBirth;
+  const { fromDate }: { fromDate: string } = req.params;
+  const { toDate }: { toDate: string } = req.params;
   try {
-    const actorsByDate = await getActorsByDate (compareBirth1, compareBirth);
+    const actorsByDate = await getActorsByDate (fromDate, toDate);
     console.log(actorsByDate)
     res.status(200).send({ success: true, message: 'you are searching actors by birth date', body: actorsByDate });
   } catch (error) {

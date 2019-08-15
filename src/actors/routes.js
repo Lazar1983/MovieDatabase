@@ -15,7 +15,7 @@ actorRouter.get('/actors', list);
 actorRouter.get('/actors/:first_name', getActorsByName);
 actorRouter.get('/actors/movies/:first_name', getActorsByMovieTitle);
 actorRouter.get('/actors/series/:first_name', getSeriesCast);
-actorRouter.get('/actors/byDate/:compareBirth1/:compareBirth', getActorsByDateOfBirth);
+actorRouter.get('/actors/byDate/:fromDate/:toDate', getActorsByDateOfBirth);
 
 
 
