@@ -40,7 +40,6 @@ function listAdminId (id) {
   });
 };
 
-
 const getAdminById = async (req, res, next) => {
   const { id } : { id: string } = req.params;
   try {
@@ -136,19 +135,31 @@ const createAdmin = async (req, res, next) => {
 }
 
 const login = async (req, res, next) => {
-  const { username, email, password } : { username: ?string, email: ?string, password: string } = req.body; 
+  const { 
+    username, 
+    email,
+    phonenumber, 
+    password
+  } : { 
+    username: ?string, 
+    email: ?string,
+    phonenumber: ?string, 
+    password: string 
+  } = req.body; 
 
 
-  const adminWithUsernameOrEmail = 'SELECT * FROM administrator WHERE username = ? OR email = ?';
-  return con.query(adminWithUsernameOrEmail, [username, email], (err, results) => {
+  const adminLoginValues = 'SELECT * FROM administrator WHERE username = ? OR email = ? OR phonenumber = ?';
+
+  return con.query(adminLoginValues, [username, email, phonenumber], (err, results) => {
     if(err) {
       console.error(err);
     }
 
     const adminUser = results.find(userObj => userObj.username === username);
     const adminEmail = results.find(emailObj => emailObj.email === email);
+    const adminPhone = results.find(phoneObj => phoneObj.phonenumber === phonenumber);
     
-    if (!adminEmail) {
+    if (!adminEmail && !adminPhone) {
       if (results && results.length && adminUser.username) {
         const matchPassword : boolean = bcrypt.compareSync(password, adminUser.password);
         if (matchPassword) {
@@ -163,7 +174,7 @@ const login = async (req, res, next) => {
       } else {
           res.status(404).send(`User with username ${username} not found!`);
         }
-    } else {
+    } else if (!adminPhone && !adminUser) {
       if (results && results.length && adminEmail.email) {
         const matchPassword : boolean = bcrypt.compareSync(password, adminEmail.password);
           if (matchPassword) {
@@ -178,7 +189,22 @@ const login = async (req, res, next) => {
       } else {
         res.status(404).send(`User with email ${email} not found!`);
         } 
-    }
+    } else if (!adminEmail && !adminUser) {
+        if (results && results.length && adminPhone.phonenumber) {
+          const matchPassword : boolean = bcrypt.compareSync(password, adminPhone.password);
+          if (matchPassword) {
+            delete adminPhone.password;
+            delete adminPhone.salt;
+            const adminPhoneId = adminPhone.id;
+            const token = jwt.sign({ adminPhone }, 'aaaa', { expiresIn: '1h'});
+            res.status(200).send({message: 'Logged in', token: token});
+          } else {
+              res.status(403).send('Password is not correct');
+            }
+        } else {
+            res.status(404).send(`User with phonenumber ${phonenumber} not found!`);
+          } 
+      } 
   });
   
 
