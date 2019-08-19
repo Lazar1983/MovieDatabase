@@ -48,7 +48,7 @@ const getMovieByLanguage = async (req, res, next) => {
   const { language } : { language : string } = req.params;
   try {
     const movieLanguage = await getMovieLanguage(language);
-    res.status(200).send({ success: true, message: 'your movie search by language is:', body: movieLanguage });
+    res.status(200).send({ success: true, message: `your movie search by ${language} is:`, body: movieLanguage });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
@@ -135,6 +135,53 @@ const getMoviesRating = async (req, res, next) => {
   await next;
 }
 
+function getMoviesByLength (length1, length2) {
+  const getMovieLengthQuery = 'SELECT title, length FROM movies WHERE length > ? AND length < ?';
+  return new Promise((resolve, reject) => {
+    con.query(getMovieLengthQuery, [length1, length2], (err, results) => {
+      if (err) {
+        reject (err);
+      }
+      resolve(results);
+    })
+  }) 
+}
+
+const getMoviesLength = async (req, res, next) => {
+  const { length1 } : { length1 : string } = req.params;
+  const { length2 } : { length2 : string } = req.params;
+  try {
+    const movieLength = await getMoviesByLength (length1, length2);
+    res.status(200).send({ success: true, message: `your movie search by length ${length1} minutes and ${length2} minutes is:`, body: movieLength });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'internal server error'});
+  }
+  await next;
+}
+
+function moviesDate(start_date, end_date) {
+  const getMovieByDateQuery = 'SELECT * FROM movies WHERE release_date > ? AND release_date < ?';
+  return new Promise((resolve, reject) => {
+    con.query(getMovieByDateQuery, [start_date , end_date], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+};
+
+const getMoviesByReleaseDate = async (req, res, next) => {
+  const { start_date }: { start_date: string } = req.params;
+  const { end_date } : { end_date: string } = req.params;
+  try {
+    const searchMoviesByReleaseDate = await moviesDate(start_date, end_date);
+    res.status(200).send({ success: true, message: `Movies by release date from ${start_date} to ${end_date}`, body: searchMoviesByReleaseDate });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'internal server error'});
+  }
+  await next;
+}
 
 
 
@@ -144,5 +191,7 @@ export default {
   getMovieByLanguage,
   getMovieByGenre,
   getMoviesCast,
-  getMoviesRating
+  getMoviesRating,
+  getMoviesLength,
+  getMoviesByReleaseDate
 } 

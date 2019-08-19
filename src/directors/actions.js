@@ -89,6 +89,29 @@ const getDirectorsMovies = async (req, res, next) => {
   await next;
 }
 
+function directorByBirth(start_date , end_date) {
+  const getDirectorBirthQuery = 'SELECT * FROM directors WHERE birth_date > ? AND birth_date < ?';
+  return new Promise((resolve, reject) => {
+    con.query(getDirectorBirthQuery, [start_date , end_date], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+};
+
+const getDirectorsByBirth = async (req, res, next) => {
+  const { start_date }: { start_date: string } = req.params;
+  const { end_date } : { end_date: string } = req.params;
+  try {
+    const searchDirectorsByBirthDate = await directorByBirth(start_date , end_date);
+    res.status(200).send({ success: true, message: 'Directors by birth_date', body: searchDirectorsByBirthDate });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'internal server error'});
+  }
+  await next;
+}
 
 
 
@@ -96,5 +119,6 @@ export default {
   list,
   get, 
   getDirectorsSeries,
-  getDirectorsMovies
+  getDirectorsMovies,
+  getDirectorsByBirth
 } 

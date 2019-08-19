@@ -8,7 +8,9 @@ const {
   getSerieByGenre,
   getSeriesByLanguage,
   getSeriesByNumberOfEpisodes,
-  getSeriesRating
+  getSeriesRating,
+  getSeriesByReleaseDate,
+  seriesByEpisodesCount
 } = actions;
  
 const seriesRouter = Router();
@@ -20,6 +22,8 @@ seriesRouter.get('/series/genre/:genre_name', getSerieByGenre);
 seriesRouter.get('/series/language/:language', getSeriesByLanguage);
 seriesRouter.get('/series/episodes/:episodes/', getSeriesByNumberOfEpisodes);
 seriesRouter.get('/series/rating/:rating', getSeriesRating);
+seriesRouter.get('/series/byDate/:start_date/:end_date', getSeriesByReleaseDate);
+seriesRouter.get('/series/byNumberOfEpisodes/:start_count/:end_count', seriesByEpisodesCount);
 
 
 

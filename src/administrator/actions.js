@@ -8,6 +8,16 @@ const { con } = database;
 Bluebird.promisifyAll(jwt);
 Bluebird.promisifyAll(bcrypt);
 
+function listAllStudios(id) {
+  const listStudios = 'SELECT * FROM studio where id=?';
+  return new Promise((resolve, reject) => {
+    con.query(listStudios, [Number(id)],  (err, results) => {
+      if (err) throw (err);
+      resolve(results);
+    });
+  });
+};
+
 function listAllAdmins() {
   const listAdmins = 'SELECT * FROM administrator';
   return new Promise((resolve, reject) => {
@@ -73,6 +83,14 @@ function validateEmail (email) {
   }
 };
 
+function strongPassword (password) {
+  if (password.includes('!') || password.includes('@') || password.includes('#') || password.includes('$') || password.includes('%') || password.includes('^') || password.includes('&') || password.includes('*') && (password.includes(Number)) && password.length() >= 8 ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function createAdminPromise (username, email, phonenumber, passHash, salt, createAt) {
   const createNewAdmin = `INSERT INTO administrator (username, email, phonenumber, password, salt, created_at) VALUES (?,?,?,?,?,?)`;
   return new Promise((resolve, reject) => {
@@ -106,6 +124,8 @@ const createAdmin = async (req, res, next) => {
 
   const phoneNumber = validatePhoneNumber (phonenumber);
   const validEmail = validateEmail(email);
+  const validPassword = strongPassword(password);
+  console.log(validPassword);
 
   const listAdmin = await listAllAdmins ();
 
@@ -120,7 +140,7 @@ const createAdmin = async (req, res, next) => {
       };
     };
   }
-  if (phoneNumber === true && validEmail === true) {
+  if (phoneNumber === true && validEmail === true && validPassword === true) {
     try {
       const createdAdmin = await createAdminPromise(username, email, phonenumber, passHash, salt, createAt);
       res.status(201).send({ success: true, message: 'Created new admin', body: {username, email, phonenumber, password}});
@@ -563,6 +583,32 @@ const deleteAdmin = async (req, res, next) => {
   await next;
 }
 
+function updateStuidoValues (worth, id) {
+  const updateStudioWorth = 'UPDATE studio SET worth=? WHERE id=?';
+  return new Promise((resolve, reject) => {
+    con.query(updateStudioWorth, [worth, Number(id)], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+}
+
+const updateStudioWorth = async (req, res, next) => {
+  const { id }: { id : string } = req.params;
+  const { worth } : { worth: string } = req.body;
+ 
+  try {
+    const updatedStudioWorth = await updateStuidoValues (worth, id);
+    res.status(201).send({ success: true, message: 'Updated worth of studio', body: updatedStudioWorth });
+  } catch (error) {
+      res.status(500).send({ success: false, message: 'Server error' });
+    }
+    
+  await next;
+}
+
 export default {
   list,
   getAdminById,
@@ -577,5 +623,6 @@ export default {
   updateAdmin,
   updateMovieRating,
   updateSerieRating,
-  deleteAdmin
+  deleteAdmin,
+  updateStudioWorth
 } 

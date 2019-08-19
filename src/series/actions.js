@@ -160,6 +160,55 @@ const getSeriesRating = async (req, res, next) => {
   await next;
 }
 
+function seriesDate(start_date, end_date) {
+  const getSeriesByDateQuery = 'SELECT * FROM series WHERE release_date > ? AND release_date < ?';
+  return new Promise((resolve, reject) => {
+    con.query(getSeriesByDateQuery, [start_date , end_date], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+};
+
+const getSeriesByReleaseDate = async (req, res, next) => {
+  const { start_date }: { start_date: string } = req.params;
+  const { end_date } : { end_date: string } = req.params;
+  try {
+    const searchSeriesByReleaseDate = await seriesDate(start_date, end_date);
+    res.status(200).send({ success: true, message: 'Series by release date', body: searchSeriesByReleaseDate });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'internal server error'});
+  }
+  await next;
+}
+
+function seriesEpisode(start_count, end_count) {
+  const numberOfEpisodes = 'SELECT * FROM series WHERE episodes > ? AND episodes < ?';
+  return new Promise((resolve, reject) => {
+    con.query(numberOfEpisodes, [start_count, end_count], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(results);
+    });
+  });
+};
+
+const seriesByEpisodesCount = async (req, res, next) => {
+  const { start_count }: { start_count: string } = req.params;
+  const { end_count } : { end_count: string } = req.params;
+  try {
+    const seriesByEpisodeCount = await seriesEpisode(start_count, end_count);
+    res.status(200).send({ success: true, message: 'Series by release date', body: seriesByEpisodeCount });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'internal server error'});
+  }
+  await next;
+}
+
+
 export default {
   list,
   get,
@@ -167,5 +216,7 @@ export default {
   getSerieByGenre,
   getSeriesByLanguage,
   getSeriesByNumberOfEpisodes,
-  getSeriesRating
+  getSeriesRating,
+  getSeriesByReleaseDate,
+  seriesByEpisodesCount
 } 

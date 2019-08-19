@@ -92,7 +92,6 @@ const getSeriesCast = async (req, res, next) => {
 
 function getActorsByDate(fromDate, toDate) {
   const getActorsByDate = `SELECT * FROM actors WHERE birth_date > ? AND birth_date < ?`;
-  console.log(getActorsByDate);
   return new Promise((resolve, reject) => {
     con.query(getActorsByDate, [fromDate, toDate], (err, results) => {
       if (err) {
@@ -108,7 +107,6 @@ const getActorsByDateOfBirth = async (req, res, next) => {
   const { toDate }: { toDate: string } = req.params;
   try {
     const actorsByDate = await getActorsByDate (fromDate, toDate);
-    console.log(actorsByDate)
     res.status(200).send({ success: true, message: 'you are searching actors by birth date', body: actorsByDate });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});

@@ -2,19 +2,20 @@ import database from '../database/mysql';
 
 const { con } = database;
 
-function listAllStudios() {
-  const listStudios = 'SELECT * FROM studio';
+function listAllStudios(id) {
+  const listStudios = 'SELECT * FROM studio where id=?';
   return new Promise((resolve, reject) => {
-    con.query(listStudios, (err, results) => {
+    con.query(listStudios, [Number(id)],  (err, results) => {
       if (err) throw (err);
       resolve(results);
     });
   });
 };
 
-const list = async (req, res, next) => {
+const listStudioById = async (req, res, next) => {
+  const { id } : { id: string } = req.params;
   try {
-    const studios: Array = await listAllStudios();
+    const studios = await listAllStudios(id);
     res.status(200).send({ success: true, message: 'A list of all studios', body: studios });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
@@ -64,10 +65,18 @@ const getStudioMovies = async (req, res, next) => {
   await next;
 }
 
-function getStudioWorthPromise(worth) {
-  const getStudioWorthQuery = 'SELECT * FROM studio WHERE worth > ?';
+function worthVaues (worth1, worth2) {
+  if (worth1 < worth2) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function getStudioWorthPromise(worth1, worth2) {
+  const getStudioWorthQuery = 'SELECT name, worth FROM studio WHERE worth > ? AND worth < ?';
   return new Promise((resolve, reject) => {
-    con.query(getStudioWorthQuery, [worth], (err, results) => {
+    con.query(getStudioWorthQuery, [parseFloat(worth1), parseFloat(worth2)], (err, results) => {
       if (err) throw (err);
       resolve(results);
     });
@@ -75,19 +84,26 @@ function getStudioWorthPromise(worth) {
 };
 
 const getStudioWorth = async (req, res, next) => {
-  const { worth } : { worth: string } = req.params;
-  try {
-    const studioWorth = await getStudioWorthPromise(worth);
-    res.status(200).send({ success: true, message: 'Studio search by worth is:', body: studioWorth });
-  } catch (error) {
-    res.status(500).send({ success: false, message: 'internal server error'});
+  const { worth1 } : { worth1: string } = req.params;
+  const { worth2 } : { worth2: string } = req.params;
+  const checkValues = worthVaues(worth1, worth2);
+
+  if (checkValues === true) {
+    try {
+      const studioWorth = await getStudioWorthPromise(worth1, worth2);
+      res.status(200).send({ success: true, message: 'Studio search by worth is:', body: studioWorth });
+    } catch (error) {
+        res.status(500).send({ success: false, message: 'internal server error'});
+      }
+  } else {
+    res.status(404).send({success: false, message: 'The first value must be smaller to get results'})
   }
+
   await next;
 }
 
-
 export default {
-  list,
+  listStudioById,
   get,
   getStudioMovies,
   getStudioWorth

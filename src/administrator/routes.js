@@ -15,7 +15,8 @@ const {
   updateAdmin,
   updateMovieRating,
   updateSerieRating,
-  deleteAdmin 
+  deleteAdmin,
+  updateStudioWorth 
 } = actions;
 
 const adminRouter = Router();
@@ -32,8 +33,9 @@ adminRouter.post('/admin/:id/studio/', createStudio);
 adminRouter.post('/admin/:id/genre/', createGenre);
 adminRouter.put('/admin/:id/rating/', updateMovieRating);
 adminRouter.put('/admin/:id', updateAdmin);
-adminRouter.put('/admin/:id/movies/:id/:rating', updateMovieRating);
-adminRouter.put('/admin/:id/series/:id/:rating', updateSerieRating);
+adminRouter.put('/admin/:id/movies/:id', updateMovieRating);
+adminRouter.put('/admin/:id/series/:id', updateSerieRating);
+adminRouter.put('/admin/:id/studio/:id', updateStudioWorth);
 adminRouter.delete('/admin/:id', deleteAdmin);
 
 
