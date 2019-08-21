@@ -12,20 +12,20 @@ function listAllActors() {
   });
 };
 
-const list = async (req, res, next) => {
+const listOfAllActors = async (req, res, next) => {
   try {
     const actors: Array = await listAllActors();
-    res.status(200).send({ success: true, message: 'A list of all actors', body: actors });
+    res.status(200).send({ success: true, message: 'A list of all actors:', body: actors });
   } catch (error) {
-    res.status(500).send({ success: false, message: 'internal server error'});
-  }
+      res.status(500).send({ success: false, message: 'internal server error'});
+    }
   await next;
 }
 
-function searchActorsByName (name) {
-  const getActorsByNameQuery = 'SELECT * FROM actors WHERE first_name = ? or last_name';
+function searchActorsByName (fName, lName) {
+  const getActorsByNameQuery = `SELECT * FROM actors WHERE first_name AS ${fName} = ? OR last_name AS ${lName} = ?`;
   return new Promise((resolve, reject) => {
-    con.query(getActorsByNameQuery, [name], (err, results) => {
+    con.query(getActorsByNameQuery, [fName, lName], (err, results) => {
       if (err) {
         reject(err);
       }
@@ -35,13 +35,16 @@ function searchActorsByName (name) {
 };
 
 const getActorsByName = async (req, res, next) => {
-  const { first_name }: { first_name : string } = req.params;
+    let fName = req.query.fName;
+    let lName = req.query.lName;
   try {
-    const searchActorByName = await searchActorsByName(first_name);
-    res.status(200).send({ success: true, message: 'your searching Actor by name :', body: searchActorByName });
+    const searchActorByName = await searchActorsByName(fName, lName);
+    console.log(searchActorByName)
+    res.status(200).send({ success: true, message: `Your searching actor by name :`, body: searchActorByName });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
+  
   await next;
 }
 
@@ -121,7 +124,7 @@ const getActorsByDateOfBirth = async (req, res, next) => {
 
 
 export default {
-  list,
+  listOfAllActors,
   getActorsByName,
   getActorsByMovieTitle,
   getSeriesCast,
