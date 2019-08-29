@@ -6,13 +6,16 @@ function listAllMovies() {
   const listMovies = 'SELECT * FROM movies';
   return new Promise((resolve, reject) => {
     con.query(listMovies, (err, results) => {
-      if (err) throw (err);
+      if (err) {
+        reject(err);
+      };
       resolve(results);
     });
   });
 };
 
 const list = async (req, res, next) => {
+
   try {
     const movies: Array = await listAllMovies();
     res.status(200).send({ success: true, message: 'A list of all movies', body: movies });

@@ -5,7 +5,7 @@ import logger from 'morgan';
 import cors from 'cors';
 import unless from 'express-unless';
 import jwt from 'express-jwt';
-import io from 'socket.io';
+
 
 import indexRouter from './index/router';
 

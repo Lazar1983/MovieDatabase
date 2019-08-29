@@ -8,21 +8,14 @@ const { con } = database;
 Bluebird.promisifyAll(jwt);
 Bluebird.promisifyAll(bcrypt);
 
-function listAllStudios(id) {
-  const listStudios = 'SELECT * FROM studio where id=?';
-  return new Promise((resolve, reject) => {
-    con.query(listStudios, [Number(id)],  (err, results) => {
-      if (err) throw (err);
-      resolve(results);
-    });
-  });
-};
 
 function listAllAdmins() {
   const listAdmins = 'SELECT * FROM administrator';
   return new Promise((resolve, reject) => {
     con.query(listAdmins, (err, results) => {
-      if (err) throw (err);
+      if (err) {
+        reject(err);
+      };
       resolve(results);
     });
   });
@@ -54,7 +47,7 @@ const getAdminById = async (req, res, next) => {
   const { id } : { id: string } = req.params;
   try {
     const adminByIds = await listAdminId(id);
-    res.status(200).send({ success: true, message: 'Get administrators by id', body: adminByIds });
+    res.status(200).send({ success: true, message: `Get administrators by ID:${id}`, body: adminByIds });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
@@ -475,7 +468,7 @@ const createGenre = async (req, res, next) => {
   const { genre_name }: { genre_name : string } = req.body;
   try {
     const newGenre = await createMovieGenre (genre_name);
-    res.status(201).send({ success: true, message: 'Created new studio', body: {genre_name} });
+    res.status(201).send({ success: true, message: 'Created new genre', body: {genre_name} });
   } catch (error) {
     res.status(500).send({ success: false, message: 'Server error' });
   }

@@ -22,10 +22,10 @@ const listOfAllActors = async (req, res, next) => {
   await next;
 }
 
-function searchActorsByName (fName, lName) {
-  const getActorsByNameQuery = `SELECT * FROM actors WHERE first_name AS ${fName} = ? OR last_name AS ${lName} = ?`;
+function searchActorsByName (name) {
+  const getActorsByNameQuery = `SELECT first_name, last_name, birth_date FROM actors WHERE first_name = ? OR last_name = ?`;
   return new Promise((resolve, reject) => {
-    con.query(getActorsByNameQuery, [fName, lName], (err, results) => {
+    con.query(getActorsByNameQuery, [name, name], (err, results) => {
       if (err) {
         reject(err);
       }
@@ -35,12 +35,10 @@ function searchActorsByName (fName, lName) {
 };
 
 const getActorsByName = async (req, res, next) => {
-    let fName = req.query.fName;
-    let lName = req.query.lName;
+  const { name } : { name: string } = req.params;
   try {
-    const searchActorByName = await searchActorsByName(fName, lName);
-    console.log(searchActorByName)
-    res.status(200).send({ success: true, message: `Your searching actor by name :`, body: searchActorByName });
+    const searchActorByName = await searchActorsByName(name);
+    res.status(200).send({ success: true, message: `Your searching actor by ${name} :`, body: searchActorByName });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
@@ -48,10 +46,10 @@ const getActorsByName = async (req, res, next) => {
   await next;
 }
 
-function actorsByMovieTitle (first_name) {
-  const getActorsMoviesQuery = 'SELECT title, length, release_date, rating, language FROM movies JOIN actors_movies ON movies.id = actors_movies.movies_id JOIN actors ON actors_movies.actors_movies_id = actors.id WHERE first_name = ?';
+function actorsByMovieTitle (name) {
+  const getActorsMoviesQuery = 'SELECT title, length, release_date, rating, language FROM movies JOIN actors_movies ON movies.id = actors_movies.movies_id JOIN actors ON actors_movies.actors_movies_id = actors.id WHERE first_name = ? OR last_name = ?';
   return new Promise((resolve, reject) => {
-    con.query(getActorsMoviesQuery, [first_name], (err, results) => {
+    con.query(getActorsMoviesQuery, [name, name], (err, results) => {
       if (err) {
         reject(err);
       }
@@ -61,32 +59,33 @@ function actorsByMovieTitle (first_name) {
 };
 
 const getActorsByMovieTitle = async (req, res, next) => {
-  const { first_name }: { first_name : string } = req.params;
+  const { name }: { name : string } = req.params;
   try {
-    const searchActorMovies = await actorsByMovieTitle(first_name);
-    res.status(200).send({ success: true, message: `${first_name} movies is:`, body: searchActorMovies });
+    const searchActorMovies = await actorsByMovieTitle(name);
+    res.status(200).send({ success: true, message: `${name} acting movies is:`, body: searchActorMovies });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
   await next;
 }
 
-
-function getSeriesCastPromise(first_name) {
-  const getSeriesCastQuery = 'SELECT title, language, release_date, episodes, rating FROM series JOIN actors_series ON series.id = actors_series.series_id JOIN actors ON actors_series.actors_series_id = actors.id WHERE first_name = ?';
+function getSeriesCastPromise(name) {
+  const getSeriesCastQuery = 'SELECT title, language, release_date, episodes, rating FROM series JOIN actors_series ON series.id = actors_series.series_id JOIN actors ON actors_series.actors_series_id = actors.id WHERE first_name = ? OR last_name = ?';
   return new Promise((resolve, reject) => {
-    con.query(getSeriesCastQuery, [first_name],(err, results) => {
-      if (err) throw (err);
+    con.query(getSeriesCastQuery, [name, name],(err, results) => {
+      if (err) {
+        reject(err)
+      };
       resolve(results);
     });
   });
 };
 
 const getSeriesCast = async (req, res, next) => {
-  const { first_name }: { first_name: string } = req.params;
+  const { name }: { name: string } = req.params;
   try {
-    const seriesCast = await getSeriesCastPromise(first_name);
-    res.status(200).send({ success: true, message: 'you are searching series by first name', body: seriesCast });
+    const seriesCast = await getSeriesCastPromise(name);
+    res.status(200).send({ success: true, message: `${name} acting series is:`, body: seriesCast });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
@@ -110,18 +109,12 @@ const getActorsByDateOfBirth = async (req, res, next) => {
   const { toDate }: { toDate: string } = req.params;
   try {
     const actorsByDate = await getActorsByDate (fromDate, toDate);
-    res.status(200).send({ success: true, message: 'you are searching actors by birth date', body: actorsByDate });
+    res.status(200).send({ success: true, message: `Your searching actors by ${fromDate} to ${toDate}`, body: actorsByDate });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
   await next;
 }
-
-
-
-
-
-
 
 export default {
   listOfAllActors,

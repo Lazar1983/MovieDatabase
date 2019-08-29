@@ -12,11 +12,9 @@ const {
 const actorRouter = Router();
 
 actorRouter.get('/actors', listOfAllActors);
-actorRouter.get('/actors?:fName=&lName=', getActorsByName);
-actorRouter.get('/actors/movies/:first_name', getActorsByMovieTitle);
-actorRouter.get('/actors/series/:first_name', getSeriesCast);
+actorRouter.get('/actors/:name', getActorsByName);
+actorRouter.get('/actors/movies/:name', getActorsByMovieTitle);
+actorRouter.get('/actors/series/:name', getSeriesCast);
 actorRouter.get('/actors/byDate/:fromDate/:toDate', getActorsByDateOfBirth);
-
-
 
 export default actorRouter;
