@@ -2,8 +2,9 @@ import database from '../database/mysql';
 
 const { con } = database;
 
+
 function listAllMovies() {
-  const listMovies = 'SELECT * FROM movies';
+  const listMovies = 'SELECT title FROM movies';
   return new Promise((resolve, reject) => {
     con.query(listMovies, (err, results) => {
       if (err) {
@@ -15,10 +16,14 @@ function listAllMovies() {
 };
 
 const list = async (req, res, next) => {
-
   try {
     const movies: Array = await listAllMovies();
-    res.status(200).send({ success: true, message: 'A list of all movies', body: movies });
+    let movie = [];
+    for (let i = 0; i < movies.length; i++) {
+      let title = movies[i].title;
+      movie.push(title);
+    }
+    res.status(200).send({ success: true, message: 'A list of all movies', body: {movie} });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
@@ -26,14 +31,40 @@ const list = async (req, res, next) => {
 }
 
 function getSingleMovie(title) {
-  const getMovieByNameQuery = 'SELECT * FROM movies where title = ?';
+  const getMovieByNameQuery = 'SELECT * FROM movies WHERE title = ?';
   return new Promise((resolve, reject) => {
     con.query(getMovieByNameQuery, [title], (err, results) => {
-      if (err) throw (err);
+      if (err) {
+        reject(err)
+      };
       resolve(results);
     });
   });
 };
+
+function getStudioMovies(name) {
+  const getStudioMoviesQuery = 'SELECT title, name, genre_name FROM movies JOIN studio ON movies.studio_id = studio.id JOIN genres ON movies.genres_movies_id = genres.id WHERE title = ?';
+  return new Promise((resolve, reject) => {
+    con.query(getStudioMoviesQuery, name, (err, results) => {
+      if (err) {
+        reject(err);
+      };
+      resolve(results);
+    });
+  });
+};
+
+const getMovieByName = async (req, res, next) => {
+  const { name } : { name : string } = req.params;
+ 
+  try {
+    const movieName = await getStudioMovies(name);
+    res.status(200).send({ success: true, message: `your movie search by title ${name} is:`, body: movieName });
+  } catch (error) {
+    res.status(500).send({ success: false, message: 'internal server error'});
+  }
+  await next;
+}
 
 function getMovieLanguage (language) {
   const getMovieByLanguageQuery = 'SELECT * FROM movies WHERE language = ?';
@@ -52,17 +83,6 @@ const getMovieByLanguage = async (req, res, next) => {
   try {
     const movieLanguage = await getMovieLanguage(language);
     res.status(200).send({ success: true, message: `your movie search by ${language} is:`, body: movieLanguage });
-  } catch (error) {
-    res.status(500).send({ success: false, message: 'internal server error'});
-  }
-  await next;
-}
-
-const getMovieByName = async (req, res, next) => {
-  const { title } : { title : string } = req.params;
-  try {
-    const movieName = await getSingleMovie(title);
-    res.status(200).send({ success: true, message: 'your movie search by title is:', body: movieName });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }

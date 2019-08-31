@@ -6,7 +6,9 @@ function listAllStudios() {
   const listStudios = 'SELECT name FROM studio';
   return new Promise((resolve, reject) => {
     con.query(listStudios, (err, results) => {
-      if (err) throw (err);
+      if (err) {
+        reject(err);
+      };
       resolve(results);
     });
   });
@@ -14,13 +16,12 @@ function listAllStudios() {
 
 const listStudios = async (req, res, next) => {
   try {
-    const studios = await listAllStudios();
+    const studios: Array = await listAllStudios();
     let studio = [];
     for (let i = 0; i < studios.length; i++) {
-        let name = studios[i].name
-        studio.push(name);
+      let name = studios[i].name
+      studio.push(name);
     }
-
     res.status(200).send({ success: true, message: 'A list of all studios', body: {studio}  });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
@@ -32,7 +33,9 @@ function getStudioByName(name) {
   const getStudioByNameQuery = 'SELECT * FROM studio WHERE name = ?';
   return new Promise((resolve, reject) => {
     con.query(getStudioByNameQuery, [name],(err, results) => {
-      if (err) throw (err);
+      if (err) {
+        reject(err);
+      };
       resolve(results);
     });
   });
@@ -42,7 +45,7 @@ const get = async (req, res, next) => {
   const { name } : { name: string } = req.params;
   try {
     const studioName = await getStudioByName(name);
-    res.status(200).send({ success: true, message: 'your studio search by title is:', body: studioName });
+    res.status(200).send({ success: true, message: `your studio search by name ${name}:`, body: studioName });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
@@ -63,7 +66,7 @@ const getStudioMovies = async (req, res, next) => {
   const { name } : { name: string } = req.params;
   try {
     const studioMovies = await getStudioMoviesPromise(name);
-    res.status(200).send({ success: true, message: 'your studio search by movies is:', body: studioMovies });
+    res.status(200).send({ success: true, message: `your studio search by movie name ${name}:`, body: studioMovies });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
@@ -82,7 +85,9 @@ function getStudioWorthPromise(worth1, worth2) {
   const getStudioWorthQuery = 'SELECT name, worth FROM studio WHERE worth > ? AND worth < ?';
   return new Promise((resolve, reject) => {
     con.query(getStudioWorthQuery, [parseFloat(worth1), parseFloat(worth2)], (err, results) => {
-      if (err) throw (err);
+      if (err){
+        reject(err);
+      };
       resolve(results);
     });
   });
@@ -96,7 +101,7 @@ const getStudioWorth = async (req, res, next) => {
   if (checkValues === true) {
     try {
       const studioWorth = await getStudioWorthPromise(worth1, worth2);
-      res.status(200).send({ success: true, message: 'Studio search by worth is:', body: studioWorth });
+      res.status(200).send({ success: true, message: `Studio search by worth from ${worth1} to ${worth2}:`, body: studioWorth });
     } catch (error) {
         res.status(500).send({ success: false, message: 'internal server error'});
       }

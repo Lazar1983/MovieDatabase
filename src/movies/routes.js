@@ -15,7 +15,7 @@ const {
 const moviesRouter = Router();
 
 moviesRouter.get('/movies', list);
-moviesRouter.get('/movies/:title', getMovieByName);
+moviesRouter.get('/movies/:name', getMovieByName);
 moviesRouter.get('/movies/movieLanguage/:language', getMovieByLanguage);
 moviesRouter.get('/movies/genre/:genre_name', getMovieByGenre);
 moviesRouter.get('/movies/cast/:title', getMoviesCast);
