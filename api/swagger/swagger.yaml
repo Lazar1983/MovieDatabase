@@ -2,6 +2,7 @@ swagger : "2.0"
 info:
   version: "1.0.0"
   title: MovieDatabase
+  description: Application for Movie Actors Directors and series
 host : localhost:3000
 basePath: /
 schemes: 
@@ -10,7 +11,50 @@ consumes:
   - application/json
 produces: 
   - application/json
-paths:
-  
+paths:  
+  /admin:
+    get:
+      summary: Get some administrators
+      description: Returns a list containing all admins.
+      responses:
+        200:
+          description: A list of Admins
+          schema:
+            type: array
+            items:
+              required:
+                - username
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                phonenumber:
+                  type: string
+  /admin/{username}:
+    get:
+      summary: Gets a admin
+      description: Returns a single admin for its username
+      parameters:
+        - name: username
+          in: path
+          required: true
+          description: The admin's username
+          type: string
+      responses:
+        200:
+          description: A Admin
+          schema:
+            required:
+              - username
+            properties:
+              username:
+                type: string
+              email:
+                type: string
+              phonenumber:
+                type: string
+        404:
+          description: The Admin does not exists.
   
 

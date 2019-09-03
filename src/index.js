@@ -5,7 +5,8 @@ import logger from 'morgan';
 import cors from 'cors';
 import unless from 'express-unless';
 import jwt from 'express-jwt';
-
+import swaggerUi from 'swagger-ui-express';
+// import swaggerDocument from '../api/swagger/swagger.yaml';
 
 import indexRouter from './index/router';
 
@@ -18,6 +19,9 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ type: '*/*' }));
+
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use('/api/v1', indexRouter);
 
 // const publicRoutePaths = ['/sign-up', '/login'];
 // app.use(jwt({ secret: 'aaaa' }).unless({ path: publicRoutePaths }));
