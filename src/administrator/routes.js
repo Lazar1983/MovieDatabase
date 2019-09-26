@@ -23,7 +23,7 @@ const adminRouter = Router();
 
 adminRouter.get('/admin', list);
 adminRouter.get('/admin/:id', getAdminById);
-adminRouter.post('/sign-up', createAdmin);
+adminRouter.post('/admin/sign-up', createAdmin);
 adminRouter.post('/login', login);
 adminRouter.post('/admin/:id/movies/', createMovie);
 adminRouter.post('/admin/:id/actors/', createActor);

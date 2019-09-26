@@ -20,8 +20,6 @@ app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ type: '*/*' }));
 
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// app.use('/api/v1', indexRouter);
 
 // const publicRoutePaths = ['/sign-up', '/login'];
 // app.use(jwt({ secret: 'aaaa' }).unless({ path: publicRoutePaths }));

@@ -32,7 +32,7 @@ const list = async (req, res, next) => {
 }
 
 function listAdminId (id) {
-  const getAdmin = 'SELECT * FROM administrator WHERE id=?';
+  const getAdmin = 'SELECT username, email, phonenumber FROM administrator WHERE id=?';
   return new Promise((resolve, reject) => {
     con.query(getAdmin, [Number(id)], (err, results) => {
       if (err) {
@@ -118,7 +118,6 @@ const createAdmin = async (req, res, next) => {
   const phoneNumber = validatePhoneNumber (phonenumber);
   const validEmail = validateEmail(email);
   const validPassword = strongPassword(password);
-  console.log(validPassword);
 
   const listAdmin = await listAllAdmins ();
 
