@@ -6,7 +6,8 @@ import cors from 'cors';
 import unless from 'express-unless';
 import jwt from 'express-jwt';
 import swaggerUi from 'swagger-ui-express';
-// import swaggerDocument from '../api/swagger/swagger.yaml';
+import path from 'path';
+import es6Renderer from 'express-es6-template-engine';
 
 import indexRouter from './index/router';
 
@@ -19,6 +20,12 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ type: '*/*' }));
+
+app.get('/', (req, res) => res.send('Hello World!'))
+
+app.get('/actors/:name', (req,res) => res.send('actors' + req.params.name))
+
+
 
 
 // const publicRoutePaths = ['/sign-up', '/login'];

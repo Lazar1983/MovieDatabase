@@ -47,7 +47,7 @@ const getActorsByName = async (req, res, next) => {
 }
 
 function actorsByMovieTitle (name) {
-  const getActorsMoviesQuery = 'SELECT title, length, release_date, rating, language FROM movies JOIN actors_movies ON movies.id = actors_movies.movies_id JOIN actors ON actors_movies.actors_movies_id = actors.id WHERE first_name = ? OR last_name = ?';
+  const getActorsMoviesQuery = 'SELECT title FROM movies JOIN actors_movies ON movies.id = actors_movies.movies_id JOIN actors ON actors_movies.actors_movies_id = actors.id WHERE first_name = ? OR last_name = ?';
   return new Promise((resolve, reject) => {
     con.query(getActorsMoviesQuery, [name, name], (err, results) => {
       if (err) {
@@ -70,7 +70,7 @@ const getActorsByMovieTitle = async (req, res, next) => {
 }
 
 function getSeriesCastPromise(name) {
-  const getSeriesCastQuery = 'SELECT title, language, release_date, episodes, rating FROM series JOIN actors_series ON series.id = actors_series.series_id JOIN actors ON actors_series.actors_series_id = actors.id WHERE first_name = ? OR last_name = ?';
+  const getSeriesCastQuery = 'SELECT title FROM series JOIN actors_series ON series.id = actors_series.series_id JOIN actors ON actors_series.actors_series_id = actors.id WHERE first_name = ? OR last_name = ?';
   return new Promise((resolve, reject) => {
     con.query(getSeriesCastQuery, [name, name],(err, results) => {
       if (err) {
