@@ -23,11 +23,6 @@ app.use(bodyParser.json({ type: '*/*' }));
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
-app.get('/actors/:name', (req,res) => res.send('actors' + req.params.name))
-
-
-
-
 // const publicRoutePaths = ['/sign-up', '/login'];
 // app.use(jwt({ secret: 'aaaa' }).unless({ path: publicRoutePaths }));
 

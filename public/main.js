@@ -1,39 +1,39 @@
 function main() {
   const mainContainer = document.getElementById("mainContainer");
 
-  const getActorsByName = async () => {
-    const response = await fetch (`http://localhost:3010/actors/:name`);
+  const getActorsByNames = async () => {
+    const getActor = input.value;
+    const response = await fetch(`http://localhost:3010/actors/${getActor}`);
     const data = await response.json();
+    const artist = data.body.map((item, elem, arr) => {
+      let p = document.createElement('p');
+      p.innerText = arr[elem].first_name + arr[elem].last_name + arr[elem].birth_date;
+      newDiv.appendChild(p);
+    });
     console.log(data);
-  }
+  };
 
-  // get single actor from my api
-  const form = document.createElement('form');
-  form.setAttribute("method", "get");
-  form.setAttribute("action", "/actors/:name");
-  mainContainer.appendChild(form);
-  form.submit();
-
-  // value of this input to be response of http://localhost:3010/actors/:name
   const input = document.createElement('input');
   input.placeholder = "Enter actor name";
-  form.appendChild(input);
-  input.id = "input";
-  input.addEventListener('change', () => {
-    const dataInp = input.value;
-    console.log(dataInp);
-    return dataInp;
-  })
-
+  mainContainer.appendChild(input);
 
   const btn = document.createElement('button');
   btn.innerHTML = "Submit";
-  btn.type = "submit";
-  btn.value = "submit";
+  btn.addEventListener('click', () => {
+    newDiv.display = "block";
+    getActorsByNames();
+  });
+
   mainContainer.appendChild(btn);
-  btn.addEventListener('click', getActorsByName().value(dataInp));
+  const newDiv = document.createElement('div');
+  newDiv.display = "none";
+  newDiv.id = "newDiv";
+  newDiv.padding = "100px";
+  mainContainer.appendChild(newDiv);
 
-
+  const text = document.createElement('p');
+  newDiv.appendChild(text);  
+  
 }
 
 main();
