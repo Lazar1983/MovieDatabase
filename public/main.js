@@ -29,6 +29,39 @@ function main() {
     console.log(loginData);
   }
 
+  const createUser = async () => {
+    const response = await fetch (`http://localhost:3000/sign-up`, {
+      method: 'POST',
+      body: JSON.stringify({username: u.value, email: e.value, phonenumber: ph.value, password: p.value, })
+    });
+    const createData = await response.json();
+    console.log(createData);
+  }
+
+  const u = document.createElement('input');
+  u.placeholder = 'user';
+  mainContainer.appendChild(u);
+
+  const e = document.createElement('input');
+  e.placeholder = 'pass';
+  mainContainer.appendChild(e);
+
+  const ph = document.createElement('input');
+  ph.placeholder = "phone";
+  mainContainer.appendChild(ph);
+
+  const p = document.createElement("input");
+  p.placeholder = "pass";
+  mainContainer.appendChild(p);
+
+  const create = document.createElement('button');
+  create.innerText = "Create";
+  create.addEventListener('click', () => {
+    createUser();
+  });
+  mainContainer.appendChild(create);
+
+
 
   const user = document.createElement('input');
   user.placeholder = "Enter username, phonenumber or email";
