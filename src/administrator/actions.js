@@ -140,7 +140,7 @@ const createAdmin = async (req, res, next) => {
       res.status(500).send({ success: false, message: 'Server error' });
     } 
   } else {
-      res.status(404).send({success: false, message: "Invalid phonenumber or email format, valid phonenumber format is +1234567890, 123-456-789, 123456789, (123)-456-789 valid email is example@true.com "});
+      res.status(404).send({success: false, message: "Invalid phonenumber or email format or password is not strong, valid phonenumber format is +1234567890, 123-456-789, 123456789, (123)-456-789 valid email is example@true.com "});
     };
   
   await next;

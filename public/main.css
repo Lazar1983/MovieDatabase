@@ -1,0 +1,62 @@
+#u, #e, #ph, #p {
+  display: flex;
+  padding: 20px;
+  border: none;
+  border-radius: 25px;
+  border-bottom: 2px solid #3498db;
+  color: gray;
+  text-align: center;
+  font-size: 15px;
+  outline: none;
+} 
+
+#create, #btn, #btnLogin {
+
+    box-sizing: border-box;
+    appearance: none;
+    background-color: transparent;
+    border: 2px solid #3498db;
+    border-radius: 0.6em;
+    color: #3498db;
+    cursor: pointer;
+    display: flex;
+    align-self: center;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+    margin: 20px;
+    padding: 1.2em 2.8em;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+  
+
+  }
+
+
+
+#user, #pass {
+  display: flex;
+  padding: 20px;
+  border: none;
+  border-radius: 25px;
+  border-bottom: 2px solid greenyellow;
+  color: gray;
+  text-align: center;
+  font-size: 15px;
+  outline: none;
+}
+
+#input  {
+  display: flex;
+  padding: 20px;
+  border: none;
+  border-radius: 25px;
+  border-bottom: 2px solid greenyellow;
+  color: gray;
+  text-align: center;
+  font-size: 15px;
+  outline: none;
+}

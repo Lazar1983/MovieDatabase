@@ -1,4 +1,11 @@
+// import { Renderer } from "../presentation-layer/admin-render.js";
+
 function main() {
+
+
+
+
+
   const mainContainer = document.getElementById("mainContainer");
 
   const getActorsByNames = async () => {
@@ -27,7 +34,7 @@ function main() {
     });
     const loginData = await response.json();
     console.log(loginData);
-  }
+  };
 
   const createUser = async () => {
     const response = await fetch (`http://localhost:3000/sign-up`, {
@@ -36,60 +43,67 @@ function main() {
     });
     const createData = await response.json();
     console.log(createData);
-  }
+  };
 
   const u = document.createElement('input');
   u.placeholder = 'user';
+  u.id = "u";
   mainContainer.appendChild(u);
 
   const e = document.createElement('input');
-  e.placeholder = 'pass';
+  e.placeholder = 'email';
+  e.id = 'e';
   mainContainer.appendChild(e);
 
   const ph = document.createElement('input');
   ph.placeholder = "phone";
+  ph.id = 'ph';
   mainContainer.appendChild(ph);
 
   const p = document.createElement("input");
   p.placeholder = "pass";
+  p.id = "p";
   mainContainer.appendChild(p);
 
   const create = document.createElement('button');
   create.innerText = "Create";
+  create.id = "create";
   create.addEventListener('click', () => {
     createUser();
   });
   mainContainer.appendChild(create);
 
 
-
   const user = document.createElement('input');
   user.placeholder = "Enter username, phonenumber or email";
+  user.id = 'user';
   // username.name = "administrator[username]";
   mainContainer.appendChild(user);
 
- 
-
-
   const pass = document.createElement('input');
   pass.placeholder = "Enter password";
+  pass.id = 'pass';
   // password.name = 'administrator[password]';
   mainContainer.appendChild(pass);
-  
-  const input = document.createElement('input');
-  input.placeholder = "Enter actor name";
-  mainContainer.appendChild(input);
 
   const btnLogin = document.createElement('button');
   btnLogin.innerHTML = "Submit";
+  btnLogin.id = "btnLogin";
   btnLogin.addEventListener('click', () => {
     login();
   });
   mainContainer.appendChild(btnLogin);
+  
+  const input = document.createElement('input');
+  input.placeholder = "Enter actor name";
+  input.id = "input";
+  mainContainer.appendChild(input);
+
 
 
   const btn = document.createElement('button');
   btn.innerHTML = "Search";
+  btn.id = 'btn';
   btn.addEventListener('click', () => {
     newDiv.display = "block";
     getActorsByNames();
@@ -102,8 +116,6 @@ function main() {
   newDiv.padding = "100px";
   mainContainer.appendChild(newDiv);
 
-  const text = document.createElement('p');
-  newDiv.appendChild(text);  
   
 }
 
