@@ -1,11 +1,11 @@
 import { Renderer } from "./presentation-layer/actors-render.js";
+import { RendererAdmin } from './presentation-layer/admins-render.js';
 
 function main() {
-
-
-    var renderer = new Renderer();
-    renderer.init("Jared");
-    console.log(renderer);
+    const renderer = new Renderer();
+    const adminRender = new RendererAdmin();
+    // renderer.init("Jared");
+    // console.log(renderer);
 
 
   // const mainContainer = document.getElementById("mainContainer");
