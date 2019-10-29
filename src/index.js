@@ -8,6 +8,7 @@ import jwt from 'express-jwt';
 import swaggerUi from 'swagger-ui-express';
 import path from 'path';
 import es6Renderer from 'express-es6-template-engine';
+import qs from 'querystring';
 
 import indexRouter from './index/router';
 

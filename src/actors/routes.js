@@ -15,6 +15,6 @@ actorRouter.get('/actors', listOfAllActors);
 actorRouter.get('/actors/:name', getActorsByName);
 actorRouter.get('/actorsByMovies/:name', getActorsByMovieTitle);
 actorRouter.get('/actorsBySeries/:name', getSeriesCast);
-actorRouter.get('/actors/byDate/:fromDate/:toDate', getActorsByDateOfBirth);
+actorRouter.get('/actors?date=&date=', getActorsByDateOfBirth);
 
 export default actorRouter;
