@@ -1,4 +1,4 @@
-config/**
+config/mysql.json**
 
 # Logs
 logs
