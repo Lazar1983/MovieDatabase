@@ -1,4 +1,5 @@
 import database from '../database/mysql';
+import qs from 'querystring';
 
 const { con } = database;
 
@@ -22,10 +23,11 @@ const listOfAllActors = async (req, res, next) => {
   await next;
 }
 
-function searchActorsByName (name) {
-  const getActorsByNameQuery = `SELECT first_name, last_name, birth_date FROM actors WHERE first_name = ? OR last_name = ?`;
+function searchActorsByName (first_name) {
+  const getActorsByNameQuery = `SELECT first_name, last_name, birth_date FROM actors WHERE first_name = ?`;
   return new Promise((resolve, reject) => {
-    con.query(getActorsByNameQuery, [name, name], (err, results) => {
+
+    con.query(getActorsByNameQuery, {qs : first_name}, (err, results) => {
       if (err) {
         reject(err);
       }
@@ -35,10 +37,10 @@ function searchActorsByName (name) {
 };
 
 const getActorsByName = async (req, res, next) => {
-  const { name } : { name: string } = req.params;
+  const { first_name } : { first_name: string } = req.query;
   try {
-    const searchActorByName = await searchActorsByName(name);
-    res.status(200).send({ success: true, message: `Your searching actor by ${name} :`, body: searchActorByName });
+    const searchActorByName = await searchActorsByName(first_name);
+    res.status(200).send({ success: true, message: `Your searching actor by ${first_name} :`, body: searchActorByName });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
