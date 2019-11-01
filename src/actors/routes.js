@@ -4,7 +4,7 @@ import actions from './actions';
 const { 
   listOfAllActors, 
   getActorsByName, 
-  getActorsByMovieTitle, 
+  getActorsByMovieTitle,
   getSeriesCast, 
   getActorsByDateOfBirth
 } = actions;
@@ -15,6 +15,6 @@ actorRouter.get('/actors', listOfAllActors);
 actorRouter.get('/actors/:name', getActorsByName);
 actorRouter.get('/actorsByMovies/:name', getActorsByMovieTitle);
 actorRouter.get('/actorsBySeries/:name', getSeriesCast);
-actorRouter.get('/actors?date=&date=', getActorsByDateOfBirth);
+actorRouter.get('/actors?fromDate=&toDate=', getActorsByDateOfBirth);
 
 export default actorRouter;
