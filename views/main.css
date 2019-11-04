@@ -1,4 +1,4 @@
-#u, #e, #ph, #p {
+#u, #e, #ph, #p, #ui {
   display: flex;
   padding: 20px;
   border: none;
@@ -10,7 +10,7 @@
   outline: none;
 } 
 
-#create, #btn, #btnLogin {
+#create, #btn, #btnLogin, #seacrh {
 
     box-sizing: border-box;
     appearance: none;

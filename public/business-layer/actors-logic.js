@@ -14,4 +14,14 @@ export function ActorsPageLogic() {
         return pageData;
     }
 
+    this.getActorsPerMovies = async function (actorName) {
+        const actorByMovie = await this.actorsRepo.getActorsByMovie(actorName);
+
+        const pageData = {
+            actorsInfo: actorByMovie
+        }
+
+        return pageData;
+    }
+
 }

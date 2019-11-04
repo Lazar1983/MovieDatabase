@@ -1,5 +1,5 @@
-import { Renderer } from "./presentation-layer/actors-render.js";
-import { RendererAdmin } from './presentation-layer/admins-render.js';
+import { Renderer } from "../public/presentation-layer/actors-render.js"
+import { RendererAdmin } from '../public/presentation-layer/admins-render.js';
 
 function main() {
     const renderer = new Renderer();

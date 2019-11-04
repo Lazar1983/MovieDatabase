@@ -23,11 +23,10 @@ const listOfAllActors = async (req, res, next) => {
   await next;
 }
 
-function searchActorsByName (first_name) {
-  const getActorsByNameQuery = `SELECT first_name, last_name, birth_date FROM actors WHERE first_name = ?`;
+function searchActorsByName (name) {
+  const getActorsByNameQuery = `SELECT first_name, last_name, birth_date FROM actors WHERE first_name = ? or last_name = ?`;
   return new Promise((resolve, reject) => {
-
-    con.query(getActorsByNameQuery, {qs : first_name}, (err, results) => {
+    con.query(getActorsByNameQuery, [name, name], (err, results) => {
       if (err) {
         reject(err);
       }
@@ -37,10 +36,10 @@ function searchActorsByName (first_name) {
 };
 
 const getActorsByName = async (req, res, next) => {
-  const { first_name } : { first_name: string } = req.query;
+  const { name } : { name: string } = req.params;
   try {
-    const searchActorByName = await searchActorsByName(first_name);
-    res.status(200).send({ success: true, message: `Your searching actor by ${first_name} :`, body: searchActorByName });
+    const searchActorByName = await searchActorsByName(name);
+    res.status(200).send({ success: true, message: `Your searching actor by ${name} :`, body: searchActorByName });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
