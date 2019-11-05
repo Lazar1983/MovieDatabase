@@ -6,22 +6,15 @@ export function ActorsPageLogic() {
 
     this.getDataForActorsPage = async function(actorName) {
         const actorData = await this.actorsRepo.getActorsInfo(actorName);
+        const actorByMovie = await this.actorsRepo.getActorsByMovie(actorName);
      
         const pageData = {
-            actorsInfo: actorData
+            actorsInfo: actorData,
+            actorsMovie: actorByMovie
         };
 
         return pageData;
     }
 
-    this.getActorsPerMovies = async function (actorName) {
-        const actorByMovie = await this.actorsRepo.getActorsByMovie(actorName);
-
-        const pageData = {
-            actorsInfo: actorByMovie
-        }
-
-        return pageData;
-    }
 
 }

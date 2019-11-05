@@ -9,6 +9,7 @@ function main() {
   //   const getActor = input.value;
   //   const response = await fetch(`http://localhost:3000/actors/${getActor}`);
   //   const data = await response.json();
+
   //   const artist = data.body.map((item, i, arr) => {
   //     let p = document.createElement('p');
   //     let p1 = document.createElement('p');
@@ -20,6 +21,7 @@ function main() {
   //     newDiv.appendChild(p1);
   //     newDiv.appendChild(p2);
   //   });
+  
   //   console.log(data);
   // };
 
