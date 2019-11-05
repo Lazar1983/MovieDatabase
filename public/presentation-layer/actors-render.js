@@ -3,7 +3,6 @@ import { ActorsPageLogic } from "../business-layer/actors-logic.js";
 export function Renderer() {
     this.pageData = null;
     this.pageLogic = new ActorsPageLogic();
-    console.log(this.pageLogic);
     this.mainContainer = document.getElementById("mainContainer");
     
     this.renderAll = function() {

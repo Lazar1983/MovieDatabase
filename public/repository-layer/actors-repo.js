@@ -18,7 +18,7 @@ export function ActorsRepository() {
             const response = await fetch(`http://localhost:3080/actorsByMovies/${actorName}`);
             const data = await response.json();
             console.log("Response from Get actors by Movie ", data);
-            return new Actors(data.body[0]);
+            return new Movie(data.body[0]);
         } catch (error) {
             return error;
         }
