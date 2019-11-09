@@ -17,13 +17,13 @@ const seriesRouter = Router();
 
 seriesRouter.get('/series', list);
 seriesRouter.get('/series/:title', get);
-seriesRouter.get('/series/cast/:title', getActorsBySeriesTitle);
-seriesRouter.get('/series/genre/:genre_name', getSerieByGenre);
-seriesRouter.get('/series/language/:language', getSeriesByLanguage);
-seriesRouter.get('/series/episodes/:episodes/', getSeriesByNumberOfEpisodes);
-seriesRouter.get('/series/rating/:rating', getSeriesRating);
-seriesRouter.get('/series/byDate/:start_date/:end_date', getSeriesByReleaseDate);
-seriesRouter.get('/series/byNumberOfEpisodes/:start_count/:end_count', seriesByEpisodesCount);
+seriesRouter.get('/seriesCast/:title', getActorsBySeriesTitle);
+seriesRouter.get('/seriesGenre/:genre_name', getSerieByGenre);
+seriesRouter.get('/seriesLanguage/:language', getSeriesByLanguage);
+seriesRouter.get('/seriesEpisodes/:episodes/', getSeriesByNumberOfEpisodes);
+seriesRouter.get('/seriesRating/:rating', getSeriesRating);
+seriesRouter.get('/seriesByDate/:start_date/:end_date', getSeriesByReleaseDate);
+seriesRouter.get('/seriesByNumberOfEpisodes/:start_count/:end_count', seriesByEpisodesCount);
 
 
 
