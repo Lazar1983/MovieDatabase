@@ -22,7 +22,15 @@ app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ type: '*/*' }));
 
-app.get('/', (req, res) => res.send('Hello World!'))
+app.set('views', 'views');
+app.set('view engine', 'pug');
+app.use(express.static(__dirname + '/public'));
+
+app.get('/', (req, res) => res.render('index', { title: 'Movie Database' }));
+
+
+
+
 
 // const publicRoutePaths = ['/sign-up', '/login'];
 // app.use(jwt({ secret: 'aaaa' }).unless({ path: publicRoutePaths }));

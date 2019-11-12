@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    title #{title}
+    link(rel='stylesheet', href='main.css')
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    script(type='text/javascript' src='main.js')
+    
+  body
+    main
+      block header
+        header.header
+          h1 #{title}
+      block content
