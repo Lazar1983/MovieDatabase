@@ -58,7 +58,6 @@ export function RendererAdmin() {
       const pass = document.createElement('input');
       pass.placeholder = "Enter password";
       pass.id = 'pass';
-      // password.name = 'administrator[password]';
       mainContainer.appendChild(pass);
 
       const btnLogin = document.createElement('button');

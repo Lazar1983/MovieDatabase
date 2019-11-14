@@ -1,9 +1,9 @@
 {
     "dev": {
-      "database": "moviedb",
-      "host": "localhost",
-      "user": "root",
-      "password": "root",
+      "database": "process.env.database",
+      "host": "process.env.host",
+      "user": "process.env.username",
+      "password": "process.env.password",
       "port": 3306
     },
     "stagin": {
