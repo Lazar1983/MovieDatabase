@@ -35,7 +35,7 @@ function searchActorsByName (name) {
 };
 
 const getActorsByName = async (req, res, next) => {
-  const { name } : { name: string } = req.params;
+  const { name } : { name: string } = req.query;
   try {
     const searchActorByName = await searchActorsByName(name);
     res.status(200).send({ success: true, message: `Your searching actor by ${name} :`, body: searchActorByName });
@@ -59,7 +59,7 @@ function actorsByMovieTitle (name) {
 };
 
 const getActorsByMovieTitle = async (req, res, next) => {
-  const { name }: { name : string } = req.params;
+  const { name }: { name : string } = req.query;
   try {
     const searchActorMovies = await actorsByMovieTitle(name);
     res.status(200).send({ success: true, message: `${name} acting movies is:`, body: searchActorMovies });
@@ -82,7 +82,7 @@ function getSeriesCastPromise(name) {
 };
 
 const getSeriesCast = async (req, res, next) => {
-  const { name }: { name: string } = req.params;
+  const { name }: { name: string } = req.query;
   try {
     const seriesCast = await getSeriesCastPromise(name);
     res.status(200).send({ success: true, message: `${name} acting series is:`, body: seriesCast });
@@ -105,8 +105,7 @@ function getActorsByDate(fromDate, toDate) {
 };
 
 const getActorsByDateOfBirth = async (req, res, next) => {
-  const { fromDate }: { fromDate: string } = req.params;
-  const { toDate }: { toDate: string } = req.params;
+  const { fromDate, toDate }: { fromDate: string, toDate: string } = req.query;
   try {
     const actorsByDate = await getActorsByDate (fromDate, toDate);
     res.status(200).send({ success: true, message: `Your searching actors by ${fromDate} to ${toDate}`, body: actorsByDate });

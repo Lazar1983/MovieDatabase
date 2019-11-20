@@ -4,7 +4,7 @@ export function AdminsRepository() {
 
     this.createAdmin = async function(username, email, phonenumber, password) {
         try {
-            const response =  await fetch(`http://localhost:3000/sign-up`, {
+            const response =  await fetch(`http://localhost:3060/sign-up`, {
               method: 'POST',
               body: JSON.stringify({username, email, phonenumber, password})
             });
@@ -18,7 +18,7 @@ export function AdminsRepository() {
 
     this.loginAdmin = async function (username, password) {
       try {
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch('http://localhost:3060/login', {
           method: 'POST',
           body: JSON.stringify({username, password})
         });
