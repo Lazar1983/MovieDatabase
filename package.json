@@ -35,7 +35,7 @@
     "nunjucks": "^3.2.0",
     "path": "^0.12.7",
     "query-string": "^6.8.3",
-    "swagger-ui": "^3.23.6",
+    "swagger-ui": "^3.23.11",
     "swagger-ui-express": "^4.0.7"
   },
   "devDependencies": {
