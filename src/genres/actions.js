@@ -17,12 +17,7 @@ function listAllGenres() {
 const list = async (req, res, next) => {
   try {
     const genres: Array = await listAllGenres();
-    let genre = [];
-    for (let i = 0; i < genres.length; i++) {
-      let name = genres[i].genre_name;
-      genre.push(name);
-    }
-    res.status(200).send({ success: true, message: 'A list of all genres', body: {genre} });
+    res.status(200).send({ success: true, message: 'A list of all genres', body: genres });
   } catch (error) {
     res.status(500).send({ success: false, message: 'internal server error'});
   }
@@ -31,4 +26,4 @@ const list = async (req, res, next) => {
 
 export default {
   list
-};
+}

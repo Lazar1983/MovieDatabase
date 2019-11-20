@@ -5,4 +5,5 @@
     "flow.useNPMPackagedFlow": true,
     "eslint.alwaysShowStatus": true,
     "editor.tabSize": 2,
+    "git.ignoreLimitWarning": true,
 }

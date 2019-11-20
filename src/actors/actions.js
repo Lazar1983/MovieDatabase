@@ -1,5 +1,4 @@
 import database from '../database/mysql';
-import qs from 'querystring';
 
 const { con } = database;
 
@@ -24,7 +23,7 @@ const listOfAllActors = async (req, res, next) => {
 }
 
 function searchActorsByName (name) {
-  const getActorsByNameQuery = `SELECT first_name, last_name, birth_date FROM actors WHERE first_name = ? or last_name = ?`;
+  const getActorsByNameQuery = `SELECT first_name, last_name, birth_date FROM actors WHERE first_name = ? OR last_name = ?`;
   return new Promise((resolve, reject) => {
     con.query(getActorsByNameQuery, [name, name], (err, results) => {
       if (err) {
@@ -48,7 +47,7 @@ const getActorsByName = async (req, res, next) => {
 }
 
 function actorsByMovieTitle (name) {
-  const getActorsMoviesQuery = 'SELECT title FROM movies JOIN actors_movies ON movies.id = actors_movies.movies_id JOIN actors ON actors_movies.actors_movies_id = actors.id WHERE first_name = ? OR last_name = ?';
+  const getActorsMoviesQuery = 'SELECT title, length, release_date, rating, language FROM movies JOIN actors_movies ON movies.id = actors_movies.movies_id JOIN actors ON actors_movies.actors_movies_id = actors.id WHERE first_name = ? OR last_name = ?';
   return new Promise((resolve, reject) => {
     con.query(getActorsMoviesQuery, [name, name], (err, results) => {
       if (err) {
@@ -71,7 +70,7 @@ const getActorsByMovieTitle = async (req, res, next) => {
 }
 
 function getSeriesCastPromise(name) {
-  const getSeriesCastQuery = 'SELECT title FROM series JOIN actors_series ON series.id = actors_series.series_id JOIN actors ON actors_series.actors_series_id = actors.id WHERE first_name = ? OR last_name = ?';
+  const getSeriesCastQuery = 'SELECT title, language, release_date, episodes, rating FROM series JOIN actors_series ON series.id = actors_series.series_id JOIN actors ON actors_series.actors_series_id = actors.id WHERE first_name = ? OR last_name = ?';
   return new Promise((resolve, reject) => {
     con.query(getSeriesCastQuery, [name, name],(err, results) => {
       if (err) {
@@ -106,9 +105,8 @@ function getActorsByDate(fromDate, toDate) {
 };
 
 const getActorsByDateOfBirth = async (req, res, next) => {
-  const { fromDate }: { fromDate: string } = req.query;
-  const { toDate }: { toDate: string } = req.query;
- 
+  const { fromDate }: { fromDate: string } = req.params;
+  const { toDate }: { toDate: string } = req.params;
   try {
     const actorsByDate = await getActorsByDate (fromDate, toDate);
     res.status(200).send({ success: true, message: `Your searching actors by ${fromDate} to ${toDate}`, body: actorsByDate });

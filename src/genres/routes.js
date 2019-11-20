@@ -7,4 +7,5 @@ const genresRouter = Router();
 
 genresRouter.get('/genres', list);
 
+
 export default genresRouter;

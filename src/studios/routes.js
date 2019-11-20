@@ -7,8 +7,8 @@ const studioRouter = Router();
 
 studioRouter.get('/studio', listStudios);
 studioRouter.get('/studio/:name', get);
-studioRouter.get('/studioMovies/:name', getStudioMovies);
-studioRouter.get('/studioWorth/:worth1/:worth2', getStudioWorth);
+studioRouter.get('/studio/movies/:name', getStudioMovies);
+studioRouter.get('/studio/worth/:worth1/:worth2', getStudioWorth);
 
 
 

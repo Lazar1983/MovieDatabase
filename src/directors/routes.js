@@ -13,8 +13,8 @@ const directorsRouter = Router();
 
 directorsRouter.get('/directors', list);
 directorsRouter.get('/directors/:name', getDirectosByNames);
-directorsRouter.get('/directorSeries/:name', getDirectorsSeries);
-directorsRouter.get('/directorsMovies/:name', getDirectorsMovies);
+directorsRouter.get('/directors/series/:name', getDirectorsSeries);
+directorsRouter.get('/directors/movies/:name', getDirectorsMovies);
 directorsRouter.get('/directors/:start_date/:end_date', getDirectorsByBirth);
 
 
