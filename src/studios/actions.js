@@ -42,7 +42,7 @@ function getStudioByName(name) {
 };
 
 const get = async (req, res, next) => {
-  const { name } : { name: string } = req.params;
+  const { name } : { name: string } = req.query;
   try {
     const studioName = await getStudioByName(name);
     res.status(200).send({ success: true, message: `your studio search by name ${name}:`, body: studioName });
@@ -63,7 +63,7 @@ function getStudioMoviesPromise(name) {
 };
 
 const getStudioMovies = async (req, res, next) => {
-  const { name } : { name: string } = req.params;
+  const { name } : { name: string } = req.query;
   try {
     const studioMovies = await getStudioMoviesPromise(name);
     res.status(200).send({ success: true, message: `your studio search by movie name ${name}:`, body: studioMovies });
@@ -94,8 +94,7 @@ function getStudioWorthPromise(worth1, worth2) {
 };
 
 const getStudioWorth = async (req, res, next) => {
-  const { worth1 } : { worth1: string } = req.params;
-  const { worth2 } : { worth2: string } = req.params;
+  const { worth1, worth2 } : { worth1: string, worth2: string } = req.query;
   const checkValues = worthVaues(worth1, worth2);
 
   if (checkValues === true) {

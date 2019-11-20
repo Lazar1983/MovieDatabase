@@ -12,10 +12,10 @@ const {
 const directorsRouter = Router();
 
 directorsRouter.get('/directors', list);
-directorsRouter.get('/directors/:name', getDirectosByNames);
-directorsRouter.get('/directors/series/:name', getDirectorsSeries);
-directorsRouter.get('/directors/movies/:name', getDirectorsMovies);
-directorsRouter.get('/directors/:start_date/:end_date', getDirectorsByBirth);
+directorsRouter.get('/getDirectosByNames', getDirectosByNames);
+directorsRouter.get('/getDirectorsSeries', getDirectorsSeries);
+directorsRouter.get('/getDirectorsMovies', getDirectorsMovies);
+directorsRouter.get('/getDirectorsByBirth', getDirectorsByBirth);
 
 
 export default directorsRouter;

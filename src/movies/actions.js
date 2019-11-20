@@ -55,7 +55,7 @@ function getStudioMovies(name) {
 };
 
 const getMovieByName = async (req, res, next) => {
-  const { name } : { name : string } = req.params;
+  const { name } : { name : string } = req.query;
  
   try {
     const movieName = await getStudioMovies(name);
@@ -79,7 +79,7 @@ function getMovieLanguage (language) {
 }
 
 const getMovieByLanguage = async (req, res, next) => {
-  const { language } : { language : string } = req.params;
+  const { language } : { language : string } = req.query;
   try {
     const movieLanguage = await getMovieLanguage(language);
     res.status(200).send({ success: true, message: `your movie search by ${language} is:`, body: movieLanguage });
@@ -102,7 +102,7 @@ function getMovieByGenrePromise (genre_name) {
 }
 
 const getMovieByGenre = async (req, res, next) => {
-  const { genre_name } : { genre_name : string } = req.params;
+  const { genre_name } : { genre_name : string } = req.query;
   try {
     const movieGenre = await getMovieByGenrePromise (genre_name);
     res.status(200).send({ success: true, message: 'your movie search by genre is:', body: movieGenre });
@@ -125,7 +125,7 @@ function getMovieByCast (title) {
 }
 
 const getMoviesCast = async (req, res, next) => {
-  const { title } : { title : string } = req.params;
+  const { title } : { title : string } = req.query;
   try {
     const movieCast = await getMovieByCast (title);
     res.status(200).send({ success: true, message: 'your movie search by cast is:', body: movieCast });
@@ -148,7 +148,7 @@ function getMoviesByRating (rating) {
 }
 
 const getMoviesRating = async (req, res, next) => {
-  const { rating } : { rating : string } = req.params;
+  const { rating } : { rating : string } = req.query;
   try {
     const movieRating = await getMoviesByRating (rating);
     res.status(200).send({ success: true, message: 'your movie search by rating is:', body: movieRating });
@@ -171,8 +171,7 @@ function getMoviesByLength (length1, length2) {
 }
 
 const getMoviesLength = async (req, res, next) => {
-  const { length1 } : { length1 : string } = req.params;
-  const { length2 } : { length2 : string } = req.params;
+  const { length1, length2 } : { length1 : string, length2: string } = req.query;
   try {
     const movieLength = await getMoviesByLength (length1, length2);
     res.status(200).send({ success: true, message: `your movie search by length ${length1} minutes and ${length2} minutes is:`, body: movieLength });
@@ -195,8 +194,7 @@ function moviesDate(start_date, end_date) {
 };
 
 const getMoviesByReleaseDate = async (req, res, next) => {
-  const { start_date }: { start_date: string } = req.params;
-  const { end_date } : { end_date: string } = req.params;
+  const { start_date, end_date }: { start_date: string, end_date: string} = req.query;
   try {
     const searchMoviesByReleaseDate = await moviesDate(start_date, end_date);
     res.status(200).send({ success: true, message: `Movies by release date from ${start_date} to ${end_date}`, body: searchMoviesByReleaseDate });

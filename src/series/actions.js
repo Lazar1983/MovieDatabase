@@ -33,7 +33,7 @@ function getSingleSeries(title) {
 };
 
 const get = async (req, res, next) => {
-  const { title }: { title:string }=req.params;
+  const { title }: { title:string } = req.query;
   try {
     const seriesTitle = await getSingleSeries(title);
     res.status(200).send({ success: true, message: 'you are searching series by title', body: seriesTitle });
@@ -56,7 +56,7 @@ function actorsBySerieTitle (title) {
 };
 
 const getActorsBySeriesTitle = async (req, res, next) => {
-  const { title }: { title : string } = req.params;
+  const { title }: { title : string } = req.query;
   try {
     const searchActorSerie = await actorsBySerieTitle(title);
     res.status(200).send({ success: true, message: `${title} movies is:`, body: searchActorSerie });
@@ -79,7 +79,7 @@ function getSerieByGenrePromise (genre_name) {
 }
 
 const getSerieByGenre = async (req, res, next) => {
-  const { genre_name } : { genre_name : string } = req.params;
+  const { genre_name } : { genre_name : string } = req.query;
   try {
     const serieGenre = await getSerieByGenrePromise (genre_name);
     res.status(200).send({ success: true, message: 'your serie search by genre is:', body: serieGenre });
@@ -102,7 +102,7 @@ function getSeriesLanguage (language) {
 }
 
 const getSeriesByLanguage = async (req, res, next) => {
-  const { language } : { language : string } = req.params;
+  const { language } : { language : string } = req.query;
   try {
     const movieLanguage = await getSeriesLanguage(language);
     res.status(200).send({ success: true, message: 'your movie search by language is:', body: movieLanguage });
@@ -111,8 +111,6 @@ const getSeriesByLanguage = async (req, res, next) => {
   }
   await next;
 }
-
-
 
 function getSeriesEpisodes (episodes) {
   const getSeriesByEpisodesQuery = 'SELECT title,episodes FROM series WHERE episodes > ?';
@@ -127,7 +125,7 @@ function getSeriesEpisodes (episodes) {
 }
 
 const getSeriesByNumberOfEpisodes = async (req, res, next) => {
-  const { episodes } : { episodes : string } = req.params;
+  const { episodes } : { episodes : string } = req.query;
   try {
     const seriesEpisodes = await getSeriesEpisodes(episodes);
     res.status(200).send({ success: true, message: 'number of series episodes:', body: seriesEpisodes });
@@ -150,7 +148,7 @@ function getSeriesByRating (rating) {
 }
 
 const getSeriesRating = async (req, res, next) => {
-  const { rating } : { rating : string } = req.params;
+  const { rating } : { rating : string } = req.query;
   try {
     const seriesRating = await getSeriesByRating (rating);
     res.status(200).send({ success: true, message: 'your series search by rating is:', body: seriesRating });
@@ -173,8 +171,7 @@ function seriesDate(start_date, end_date) {
 };
 
 const getSeriesByReleaseDate = async (req, res, next) => {
-  const { start_date }: { start_date: string } = req.params;
-  const { end_date } : { end_date: string } = req.params;
+  const { start_date, end_date }: { start_date: string, end_date: string } = req.query;
   try {
     const searchSeriesByReleaseDate = await seriesDate(start_date, end_date);
     res.status(200).send({ success: true, message: 'Series by release date', body: searchSeriesByReleaseDate });
@@ -197,8 +194,7 @@ function seriesEpisode(start_count, end_count) {
 };
 
 const seriesByEpisodesCount = async (req, res, next) => {
-  const { start_count }: { start_count: string } = req.params;
-  const { end_count } : { end_count: string } = req.params;
+  const { start_count, end_count }: { start_count: string, end_count: string } = req.query;
   try {
     const seriesByEpisodeCount = await seriesEpisode(start_count, end_count);
     res.status(200).send({ success: true, message: 'Series by release date', body: seriesByEpisodeCount });

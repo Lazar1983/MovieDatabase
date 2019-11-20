@@ -37,7 +37,7 @@ function getDirectorByName(name) {
 };
 
 const getDirectosByNames = async (req, res, next) => {
-  const { name }: { name : string }=req.params;
+  const { name }: { name : string } = req.query;
   try {
     const searchDirectorByName = await getDirectorByName(name);
     res.status(200).send({ success: true, message: `Your searching directors by name ${name} is`, body: searchDirectorByName });
@@ -60,7 +60,7 @@ function directorSeries(name) {
 };
 
 const getDirectorsSeries = async (req, res, next) => {
-  const { name }: { name : string } = req.params;
+  const { name }: { name : string } = req.query;
   try {
     const searchDirectorSeries = await directorSeries(name);
     res.status(200).send({ success: true, message: `Director series by name ${name}`, body: searchDirectorSeries });
@@ -83,7 +83,7 @@ function directorMovies(name) {
 };
 
 const getDirectorsMovies = async (req, res, next) => {
-  const { name }: { name : string } = req.params;
+  const { name }: { name : string } = req.query;
   try {
     const searchDirectorMovies = await directorMovies(name);
     res.status(200).send({ success: true, message: `Director movies by name:${name}`, body: searchDirectorMovies });
@@ -106,8 +106,8 @@ function directorByBirth(start_date , end_date) {
 };
 
 const getDirectorsByBirth = async (req, res, next) => {
-  const { start_date }: { start_date: string } = req.params;
-  const { end_date } : { end_date: string } = req.params;
+  const { start_date, end_date }: { start_date: string, end_date: string } = req.query;
+
   try {
     const searchDirectorsByBirthDate = await directorByBirth(start_date , end_date);
     res.status(200).send({ success: true, message: `Directors by birth_date from ${start_date} to ${end_date}`, body: searchDirectorsByBirthDate });

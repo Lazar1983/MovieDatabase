@@ -44,7 +44,7 @@ function listAdminId (id) {
 };
 
 const getAdminById = async (req, res, next) => {
-  const { id } : { id: string } = req.params;
+  const { id } : { id: string } = req.query;
   try {
     const adminByIds = await listAdminId(id);
     res.status(200).send({ success: true, message: `Get administrators by ID:${id}`, body: adminByIds });
@@ -278,7 +278,7 @@ function updateMovieRatingPromise (rating, id) {
 }
 
 const updateMovieRating = async (req, res, next) => {
-  const { id } : { id : string } = req.params;
+  const { id } : { id : string } = req.query;
   const { rating } : { rating: string } = req.body;
   try {
     const updateRating = await updateMovieRatingPromise (rating, id);
@@ -301,7 +301,7 @@ function updateSeriesRatingPromise (rating, id) {
 }
 
 const updateSerieRating = async (req, res, next) => {
-  const { id } : { id : string } = req.params;
+  const { id } : { id : string } = req.query;
   const { rating } : { rating: string } = req.body;
   try {
     const updateRating = await updateSeriesRatingPromise (rating, id);
@@ -488,7 +488,7 @@ function updateAdminValues (username, email, phonenumber, password, id) {
 }
 
 const updateAdmin = async (req, res, next) => {
-  const { id }: { id : string } = req.params;
+  const { id }: { id : string } = req.query;
   const { 
     username,
     email,
@@ -564,7 +564,7 @@ function deleteAdminId (id) {
 }
 
 const deleteAdmin = async (req, res, next) => {
-  const { id } : { id: string } = req.params;
+  const { id } : { id: string } = req.query;
   try {
     const deletetId = await deleteAdminId (id);
     res.status(204).send({ success: true, message: 'Deleted admin' });
@@ -588,7 +588,7 @@ function updateStuidoValues (worth, id) {
 }
 
 const updateStudioWorth = async (req, res, next) => {
-  const { id }: { id : string } = req.params;
+  const { id }: { id : string } = req.query;
   const { worth } : { worth: string } = req.body;
  
   try {
